@@ -1,0 +1,15 @@
+[package]
+name = "vl_openexr_native"
+version = "0.1.0"
+edition = "2021"
+authors = ["torinos <torinosyt@gmail.com>"]
+
+[lib]
+name = "vl_openexr_native"
+crate-type = ["cdylib"]
+
+[dependencies]
+exr = "1.4.1"
+
+[profile.release]
+lto = true

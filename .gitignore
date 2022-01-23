@@ -1,0 +1,19 @@
+# vvvv
+.vl
+
+# plugin
+target/
+Cargo.lock
+
+# editor
+.vs
+.vscode
+
+# dotnet
+*.deps.json
+*.pdb
+/src/lib
+/src/obj
+
+# VL Assembly
+VL*.dll
