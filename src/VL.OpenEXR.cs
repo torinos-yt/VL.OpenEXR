@@ -17,25 +17,15 @@ namespace OpenEXR
         #pragma warning disable CA5393
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 
-        [DllImport("../native/VL.OpenEXR.Native.dll", EntryPoint = "load_meta_data")]
-        static extern IntPtr LoadExrMeta(string path, out int width, out int height, out ExrPixelFormat format);
-
-        [DllImport("../native/VL.OpenEXR.Native.dll", EntryPoint = "load_exr_f16")]
-        static extern IntPtr LoadExrHalf(string path);
-
-        [DllImport("../native/VL.OpenEXR.Native.dll", EntryPoint = "load_exr_f32")]
-        static extern IntPtr LoadExrSingle(string path);
+        [DllImport("../native/VL.OpenEXR.Native.dll")]
+        static extern IntPtr load_from_path(string path, out int width, out int height, out ExrPixelFormat format);
 
         public static byte[] LoadFromPath(string path, out int width, out int height, out PixelFormat format)
         {
             ExrPixelFormat exrFormat;
-            LoadExrMeta(path, out width, out height, out exrFormat);
+            IntPtr ptr = load_from_path(path, out width, out height, out exrFormat);
 
-            IntPtr ptr = IntPtr.Zero;
-
-            if(exrFormat == ExrPixelFormat.F16) ptr = LoadExrHalf(path);
-            else if(exrFormat == ExrPixelFormat.F32) ptr = LoadExrSingle(path);
-            else
+            if(exrFormat == ExrPixelFormat.U32 || exrFormat == ExrPixelFormat.Unknown || ptr == IntPtr.Zero) // TODO : U32 format
             {
                 format = PixelFormat.Unknown;
                 return new byte[0];
@@ -46,8 +36,6 @@ namespace OpenEXR
             {
                 ExrPixelFormat.F16 => (PixelFormat.R16G16B16A16F, 2),
                 ExrPixelFormat.F32 => (PixelFormat.R32G32B32A32F, 4),
-                ExrPixelFormat.U32 => (PixelFormat.Unknown, 4),
-                ExrPixelFormat.Unknown => (PixelFormat.Unknown, 0),
                 _ => (PixelFormat.Unknown, 0),
             };
 
