@@ -24,7 +24,7 @@ jobs:
     - name: Publish VL Nuget
       uses: vvvv/PublishVLNuget@1.0.40
       with:
-      nuspec: deployment\VL.OpenEXR.nuspec
-      icon-src: https://raw.githubusercontent.com/vvvv/PublicContent/master/nugeticon.png
-      icon-dst: ./deployment/nugeticon.png
-      nuget-key: ${{ secrets.NUGET_KEY }}
+        nuspec: deployment\VL.OpenEXR.nuspec
+        icon-src: https://raw.githubusercontent.com/vvvv/PublicContent/master/nugeticon.png
+        icon-dst: ./deployment/nugeticon.png
+        nuget-key: ${{ secrets.NUGET_KEY }}
