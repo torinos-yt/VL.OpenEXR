@@ -48,4 +48,42 @@ namespace OpenEXR
             return array;
         }
     }
+
+    public static class ExrWriter
+    {
+        #pragma warning disable CA5393
+        [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
+
+        [DllImport("../native/VL.OpenEXR.Native.dll")]
+        static extern void write_texture(string path, int width, int height, ExrPixelFormat format, IntPtr data);
+        
+        public static void WriteTexture(byte[] data, string path, int width, int height, PixelFormat format)
+        {
+            ExrPixelFormat exrFormat = format switch
+            {
+                PixelFormat.R32G32B32A32_UInt  => ExrPixelFormat.U32,
+                PixelFormat.R16G16B16A16_Float => ExrPixelFormat.F16,
+                PixelFormat.R32G32B32A32_Float => ExrPixelFormat.F32,
+                _ => ExrPixelFormat.Unknown
+            };
+
+            Console.WriteLine(exrFormat);
+            if(exrFormat == ExrPixelFormat.Unknown) return;
+            Console.WriteLine("exrFormat");
+
+            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
+            try
+            {
+                write_texture(path, width, height, exrFormat, handle.AddrOfPinnedObject());
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            finally
+            {
+                handle.Free();
+            }
+        }
+    }
 }

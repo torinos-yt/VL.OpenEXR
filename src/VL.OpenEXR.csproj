@@ -14,6 +14,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\VL.CoreLib.dll</HintPath>
     </Reference>
+    <Reference Include="Stride">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Stride.dll</HintPath>
+    </Reference>
+    <Reference Include="Stride.Core">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Stride.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Stride.Graphics">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>lib\Steide.Graphics.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
