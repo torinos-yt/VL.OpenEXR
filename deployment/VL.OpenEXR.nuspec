@@ -1,0 +1,22 @@
+
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>VL.OpenEXR</id>
+    <version>0.1.0</version>
+    <title>VL.OpenEXR</title>
+    <authors>torinos</authors>
+    <owners>torinos</owners>
+    <projectUrl>https://github.com/torinos-yt/VL.OpenEXR</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Simple OpenEXR image format loader for vvvv gamma</summary>
+    <description>Simple OpenEXR image format loader for vvvv gamma</description>
+    <tags>VL, Stride, OpenEXR</tags>
+  </metadata>
+  <files>
+    <file src="..\*.vl" target="" exclude="" />
+    <file src="..\help\*.vl" target="" exclude="" />
+    <file src="..\resources\*.exr" target="" />
+    <file src="..\lib\**\*.dll" target="" />
+  </files>
+</package>
