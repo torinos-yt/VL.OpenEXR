@@ -294,7 +294,7 @@
                   <Pin Id="NZsPrQw6LsBOY6H1K2v8Is" Name="Output" Kind="OutputPin" />
                 </Node>
                 <Node Bounds="303,933,92,19" Id="O1uQb2t32eYM7sm7QzpNcv">
-                  <p:NodeReference LastCategoryFullName="OpenEXR.ExrLoader" LastSymbolSource="VL.OpenEXR.dll">
+                  <p:NodeReference LastCategoryFullName="OpenEXR.ExrWriter" LastSymbolSource="VL.OpenEXR.dll">
                     <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                     <Choice Kind="OperationCallFlag" Name="WriteTexture" />
                   </p:NodeReference>
@@ -526,8 +526,8 @@
     </Node>
   </Patch>
   <NugetDependency Id="BGzzw9eIkE9LblY9jxsgOJ" Location="VL.CoreLib" Version="2021.4.5" />
-  <PlatformDependency Id="KlSK10gCbEuLuDB0DDXR1I" Location="./lib/netstanderd2.0/VL.OpenEXR.dll" />
   <NugetDependency Id="MdPCygr8T8pQJZ41Q8EtBg" Location="VL.Stride" Version="2021.4.5" />
   <NugetDependency Id="Kh74cAddqsIOcRIskxOfm3" Location="VL.Stride.Runtime" Version="2021.4.5" />
   <PlatformDependency Id="RorTOvMwrVtLLDRXFbqxoG" Location="./lib/netstanderd2.0/Stride.Graphics.dll" />
+  <PlatformDependency Id="UuYjpCh8TmeQMHFzoqqmcD" Location="./lib/netstandard2.0/VL.OpenEXR.dll" />
 </Document>
