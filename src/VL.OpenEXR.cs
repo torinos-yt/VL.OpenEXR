@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using VL.Lib.Basics.Imaging;
+using Stride.Graphics;
 
 namespace OpenEXR
 {
+    enum ExrPixelFormat
+    {
+        Unknown = -1,
+        U32 = 0,
+        F16 = 1,
+        F32 = 2
+    }
+
     public static class ExrLoader
     {
-        enum ExrPixelFormat
-        {
-            Unknown = -1,
-            U32 = 0,
-            F16 = 1,
-            F32 = 2
-        }
-
         #pragma warning disable CA5393
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 
@@ -25,18 +25,19 @@ namespace OpenEXR
             ExrPixelFormat exrFormat;
             IntPtr ptr = load_from_path(path, out width, out height, out exrFormat);
 
-            if(exrFormat == ExrPixelFormat.U32 || exrFormat == ExrPixelFormat.Unknown || ptr == IntPtr.Zero) // TODO : U32 format
+            if(exrFormat == ExrPixelFormat.Unknown || ptr == IntPtr.Zero)
             {
-                format = PixelFormat.Unknown;
+                format = PixelFormat.None;
                 return new byte[0];
             }
             
             int sizeInBytes = 0;
             (format, sizeInBytes) = exrFormat switch
             {
-                ExrPixelFormat.F16 => (PixelFormat.R16G16B16A16F, 2),
-                ExrPixelFormat.F32 => (PixelFormat.R32G32B32A32F, 4),
-                _ => (PixelFormat.Unknown, 0),
+                ExrPixelFormat.F16 => (PixelFormat.R16G16B16A16_Float, 2),
+                ExrPixelFormat.F32 => (PixelFormat.R32G32B32A32_Float, 4),
+                ExrPixelFormat.U32 => (PixelFormat.R32G32B32A32_UInt, 4),
+                _ => (PixelFormat.None, 0),
             };
 
             var array = new byte[width * height * 4 * sizeInBytes];

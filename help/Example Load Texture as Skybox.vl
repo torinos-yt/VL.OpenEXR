@@ -20,10 +20,8 @@
               <Choice Kind="ProcessAppFlag" Name="FileTexture" />
             </p:NodeReference>
             <Pin Id="ML8YvE0AjJSPFyKwUExW7y" Name="Path" Kind="InputPin" DefaultValue="..\resources\IndoorHDRI001_2K-HDR.exr" />
-            <Pin Id="IZRfAGbqveiLAYvcADI1IC" Name="Is SRgb" Kind="InputPin" />
             <Pin Id="SWgMEBbp3dePvfqwHMvdLp" Name="Reload" Kind="InputPin" />
             <Pin Id="AdhWUJ9jsMZNLHfnLJhtxp" Name="Texture" Kind="OutputPin" />
-            <Pin Id="K9GXGJ8bfAEMt4UMwLXHf1" Name="Has Changed" Kind="OutputPin" />
           </Node>
           <Node Bounds="413,470,212,19" Id="L9PtcZwjCECP42RqaVaNL1">
             <p:NodeReference LastCategoryFullName="Stride.Lights" LastSymbolSource="VL.Stride.Engine.vl">
@@ -108,6 +106,15 @@
             </p:TypeAnnotation>
           </Pad>
           <Pad Id="QPjSFjOgiUtN8XBR5gF6U7" Comment="Texture" Bounds="436,308,190,132" ShowValueBox="true" isIOBox="true" />
+          <Node Bounds="988,1195,67,19" Id="HaboswqnLTeO2OWHB9JYdO">
+            <p:NodeReference LastCategoryFullName="OpenEXR" LastSymbolSource="VL.OpenEXR.vl">
+              <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
+              <Choice Kind="ProcessAppFlag" Name="FileTexture" />
+            </p:NodeReference>
+            <Pin Id="EzFLvelmvDuLEDCOHMYKf9" Name="Path" Kind="InputPin" DefaultValue="..\resources\Out_OutdoorHDRI016_2K-HDR.exr" />
+            <Pin Id="QXLCmzRyXusMiaoh91L6e1" Name="Reload" Kind="InputPin" />
+            <Pin Id="DWUt4jKnZzBLHH2KKHVil4" Name="Texture" Kind="OutputPin" />
+          </Node>
         </Canvas>
         <Patch Id="O9xJLBchsLVNYbUACiJ0lm" Name="Create" />
         <Patch Id="Ki1hvooTsWhP2jkewEfAY9" Name="Update" />
@@ -115,7 +122,6 @@
           <Fragment Id="KJFhfXxEy2gNanBUEW08Lt" Patch="O9xJLBchsLVNYbUACiJ0lm" Enabled="true" />
           <Fragment Id="OxnmvCXqvkyPKxUgs7KK4v" Patch="Ki1hvooTsWhP2jkewEfAY9" Enabled="true" />
         </ProcessDefinition>
-        <Link Id="UtQ3a8NByE5P6Yeq1ulj7k" Ids="K9GXGJ8bfAEMt4UMwLXHf1,QQaKuxWshFoOlLtrIeKyjl" />
         <Link Id="HBTMrIUVeCBNba8SyCUHyM" Ids="VH5tdRcfi7TOwjVyT6pUlr,VCPXl5KL7KNOmlWMhRbqqw" />
         <Link Id="VMjA0qNUNRMLvQLyfCpFkR" Ids="Ozch59Y077ZQFrrgEhPqbg,IUu4ZB94rWQNerwQEQgYW1" />
         <Link Id="IQ6CcHSbnBENck9esSPTFZ" Ids="EGcKTYU8SLxOtMD1GXLdu3,Sb5Bdmg4lGGLnCcXhSo51u" />
