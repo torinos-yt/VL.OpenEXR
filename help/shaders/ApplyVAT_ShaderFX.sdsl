@@ -1,0 +1,80 @@
+shader ApplyVAT_ShaderFX : MaterialExtension
+{
+    cbuffer PerMaterial
+    {
+        stage int nFrames;
+        stage float posMin;
+        stage float posMax;
+
+        stage float time;
+    }
+
+    rgroup PerMaterial
+    {
+        stage Texture2D<float4> PositionTexture;
+    }
+
+    struct VATAttribute
+    {
+        float3 pos;
+        float3 norm;
+    };
+
+    VATAttribute GetAttributeFromTexture(float2 uv)
+    {
+        float FPS = 24.0;
+        float FPS_div_Frames = FPS / nFrames;
+        
+        float t = min(time, .99) * (1 / FPS) * nFrames;
+        
+        float timeInFrames = frac(FPS_div_Frames * t);
+        
+        timeInFrames = ceil(timeInFrames * nFrames);
+        timeInFrames /= nFrames;
+        
+        float2 coord;
+        coord.y = timeInFrames + uv.y;
+        coord.x = uv.x;
+        
+        float4 texturePos = PositionTexture.SampleLevel(LinearSampler, coord, 0);
+        float expand = posMax - posMin;
+        texturePos.xyz *= expand;
+        texturePos.xyz += posMin;
+        
+        float alpha = texturePos.w * 1024;
+        float2 f2;
+        f2.x = floor(alpha / 32.0) / 31.5;
+        f2.y = (alpha - (floor(alpha / 32.0) * 32.0)) / 31.5;
+        
+        float3 f3;
+        f2 *= 4;
+        f2 -= 2;
+        float f2dot = dot(f2, f2);
+        f3.xy = sqrt(1 - (f2dot / 4.0)) * f2;
+        f3.z = 1 - (f2dot / 2.0);
+        f3 = clamp(f3, -1.0, 1.0);
+        f3.x = 1 - f3.x;
+
+        VATAttribute o;
+        o.pos = texturePos.xzy;
+        o.norm = f3.xzy;
+        return o;
+    }
+
+    override stage void GenerateNormal_VS()
+    {
+        // do nothing
+    }
+
+    stage override void TransformPosition()
+    {
+        base.TransformPosition();
+
+        VATAttribute v = GetAttributeFromTexture(streams.TexCoord1);
+
+        streams.PositionWS = mul(streams.Position + float4(v.pos, 0), World);
+        streams.ShadingPosition = mul(streams.PositionWS, ViewProjection);
+
+        streams.normalWS = mul(v.norm, (float3x3)WorldInverseTranspose);
+    }
+};
