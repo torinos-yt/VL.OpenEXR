@@ -75,7 +75,8 @@ pub unsafe extern fn load_from_path(path: *const c_char, width: *mut i32, height
 
                     match v {
                         SampleType::F16 => load_exr_f16(path_str) as *mut [Sample;4],
-                        _ => load_exr_sample_type(path_str) as *mut [Sample;4]
+                        SampleType::F32 => load_exr_f32(path_str) as *mut [Sample;4],
+                        SampleType::U32 => load_exr_u32(path_str) as *mut [Sample;4]
                     }
                 },
                 None => {
@@ -94,33 +95,11 @@ pub unsafe extern fn load_from_path(path: *const c_char, width: *mut i32, height
     }
 }
 
-fn load_exr_sample_type(path: &str) -> usize {
-    let image = read_first_rgba_layer_from_file(
-        path,
-        |resolution, _| {
-            let default_pixel = [Sample::default(), Sample::default(), Sample::default(), Sample::default()];
-            let empty_line = vec![ default_pixel; resolution.width() ];
-            let empty_image = vec![ empty_line; resolution.height() ];
-            empty_image
-        },
-        |pixel_vector, position, (r,g,b, a): (Sample, Sample, Sample, Sample)| {
-            pixel_vector[position.y()][position.x()] = [r, g, b, a]
-        },
-
-    ).unwrap();
-
-    let mut pixel = image.layer_data.channel_data.pixels.into_iter().flatten().collect::<Vec<[Sample;4]>>();
-    let ptr = pixel.as_mut_ptr();
-    mem::forget(pixel);
-    
-    return unsafe { mem::transmute(ptr) };
-}
-
 fn load_exr_f16(path: &str) -> usize {
     let image = read_first_rgba_layer_from_file(
         path,
         |resolution, _| {
-            let default_pixel: [f16;4] = [f16::from_f32(0.0), f16::from_f32(0.0), f16::from_f32(0.0), f16::from_f32(0.0)];
+            let default_pixel: [f16;4] = [f16::from_f32(0.0), f16::from_f32(0.0), f16::from_f32(0.0), f16::from_f32(1.0)];
             let empty_line = vec![ default_pixel; resolution.width() ];
             let empty_image = vec![ empty_line; resolution.height() ];
             empty_image
@@ -132,6 +111,50 @@ fn load_exr_f16(path: &str) -> usize {
     ).unwrap();
 
     let mut pixel = image.layer_data.channel_data.pixels.into_iter().flatten().collect::<Vec<[f16;4]>>();
+    let ptr = pixel.as_mut_ptr();
+    mem::forget(pixel);
+    
+    return unsafe { mem::transmute(ptr) };
+}
+
+fn load_exr_f32(path: &str) -> usize {
+    let image = read_first_rgba_layer_from_file(
+        path,
+        |resolution, _| {
+            let default_pixel: [f32;4] = [0.0, 0.0, 0.0, 1.0];
+            let empty_line = vec![ default_pixel; resolution.width() ];
+            let empty_image = vec![ empty_line; resolution.height() ];
+            empty_image
+        },
+        |pixel_vector, position, (r,g,b, a): (f32, f32, f32, f32)| {
+            pixel_vector[position.y()][position.x()] = [r, g, b, a]
+        },
+
+    ).unwrap();
+
+    let mut pixel = image.layer_data.channel_data.pixels.into_iter().flatten().collect::<Vec<[f32;4]>>();
+    let ptr = pixel.as_mut_ptr();
+    mem::forget(pixel);
+    
+    return unsafe { mem::transmute(ptr) };
+}
+
+fn load_exr_u32(path: &str) -> usize {
+    let image = read_first_rgba_layer_from_file(
+        path,
+        |resolution, _| {
+            let default_pixel: [u32;4] = [0, 0, 0, 1];
+            let empty_line = vec![ default_pixel; resolution.width() ];
+            let empty_image = vec![ empty_line; resolution.height() ];
+            empty_image
+        },
+        |pixel_vector, position, (r,g,b, a): (u32, u32, u32, u32)| {
+            pixel_vector[position.y()][position.x()] = [r, g, b, a]
+        },
+
+    ).unwrap();
+
+    let mut pixel = image.layer_data.channel_data.pixels.into_iter().flatten().collect::<Vec<[u32;4]>>();
     let ptr = pixel.as_mut_ptr();
     mem::forget(pixel);
     
