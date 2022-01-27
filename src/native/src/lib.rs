@@ -6,7 +6,7 @@ use std::slice::from_raw_parts;
 use exr::prelude::*;
 
 #[no_mangle]
-pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32, format: i32, data: *const Sample) -> i32 {
+pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32, format: i32, data: *const Sample) {
     let path_str = CStr::from_ptr(path).to_str().unwrap();
 
     match format {
@@ -23,7 +23,6 @@ pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32,
                     array[(y * (width as usize) + x) * 4 + 3]
                 )
             ).unwrap();
-            1
         },
         1 => { // F16
             let ptr = data as *const f16;
@@ -38,7 +37,6 @@ pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32,
                     array[(y * (width as usize) + x) * 4 + 3]
                 )
             ).unwrap();
-            1
         },
         2 => { // F32
             let ptr = data as *const f32;
@@ -53,10 +51,8 @@ pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32,
                     array[(y * (width as usize) + x) * 4 + 3]
                 )
             ).unwrap();
-            1
         }
         _ => { // Unknown
-            0
         }
     }
 }

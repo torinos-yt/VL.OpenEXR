@@ -6,14 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="VL.Core">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\VL.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="VL.CoreLib">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>lib\VL.CoreLib.dll</HintPath>
-    </Reference>
     <Reference Include="Stride">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>lib\Stride.dll</HintPath>

@@ -67,9 +67,7 @@ namespace OpenEXR
                 _ => ExrPixelFormat.Unknown
             };
 
-            Console.WriteLine(exrFormat);
             if(exrFormat == ExrPixelFormat.Unknown) return;
-            Console.WriteLine("exrFormat");
 
             GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
             try

@@ -7,4 +7,4 @@ echo ""
 
 echo "\033[32mbuild managed plugins\033[m"
 cd ../
-dotnet.exe build -c release -o ../lib/netstanderd2.0
+dotnet.exe build -c release -o ../lib/netstandard2.0
