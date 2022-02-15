@@ -9,7 +9,8 @@ namespace OpenEXR
         Unknown = -1,
         U32 = 0,
         F16 = 1,
-        F32 = 2
+        F32 = 2,
+        RGBF32 = 3
     }
 
     public static class ExrLoader
@@ -32,15 +33,17 @@ namespace OpenEXR
             }
             
             int sizeInBytes = 0;
-            (format, sizeInBytes) = exrFormat switch
+            bool hasAlpha = true;
+            (format, sizeInBytes, hasAlpha) = exrFormat switch
             {
-                ExrPixelFormat.F16 => (PixelFormat.R16G16B16A16_Float, 2),
-                ExrPixelFormat.F32 => (PixelFormat.R32G32B32A32_Float, 4),
-                ExrPixelFormat.U32 => (PixelFormat.R32G32B32A32_UInt, 4),
-                _ => (PixelFormat.None, 0),
+                ExrPixelFormat.F16 => (PixelFormat.R16G16B16A16_Float, 2, true),
+                ExrPixelFormat.F32 => (PixelFormat.R32G32B32A32_Float, 4, true),
+                ExrPixelFormat.U32 => (PixelFormat.R32G32B32A32_UInt , 4, true),
+                ExrPixelFormat.RGBF32 => (PixelFormat.R32G32B32_Float, 4, false),
+                _ => (PixelFormat.None, 0, false),
             };
 
-            var array = new byte[width * height * 4 * sizeInBytes];
+            var array = new byte[width * height * (hasAlpha?4:3) * sizeInBytes];
             Marshal.Copy(ptr, array, 0, array.Length);
 
             Marshal.FreeCoTaskMem(ptr);

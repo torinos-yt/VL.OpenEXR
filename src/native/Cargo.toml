@@ -10,6 +10,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 exr = "1.4.1"
+radiant = "0.3.0"
 
 [profile.release]
 lto = true

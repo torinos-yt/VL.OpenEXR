@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Document xmlns:p="property" Id="IXuwmGZ5qQ1PVDdPMXLYHC" LanguageVersion="2021.4.5.764" Version="0.128">
+<Document xmlns:p="property" Id="IXuwmGZ5qQ1PVDdPMXLYHC" LanguageVersion="2021.4.6.835" Version="0.128">
   <Patch Id="IbW8cR8uZ8rOQKPIBfaIVA">
     <Canvas Id="BdoB2gFaudQPle25UEBSrc" DefaultCategory="Main" CanvasType="FullCategory">
       <!--
@@ -25,7 +25,7 @@
               <Patch Id="DeacNdEy4x0MDuyJWwv2BL" ManuallySortedPins="true">
                 <Patch Id="DTDrOsV3DI2NsfDIPPpdrz" Name="Create" ManuallySortedPins="true" />
                 <Patch Id="DHCtU123USPO8Y9N9IFhR9" Name="Then" ManuallySortedPins="true" />
-                <Node Bounds="422,402,252,213" Id="TX753wZIQrLOZkgN066s3I">
+                <Node Bounds="422,402,252,254" Id="TX753wZIQrLOZkgN066s3I">
                   <p:NodeReference LastCategoryFullName="Primitive" LastSymbolSource="VL.CoreLib.dll">
                     <Choice Kind="StatefulRegion" Name="Region (Stateful)" Fixed="true" />
                     <Choice Kind="ApplicationStatefulRegion" Name="If" />
@@ -45,7 +45,7 @@
                       </p:NodeReference>
                       <Pin Id="JiPYN2UzRooPEwlY407cQG" Name="Output" Kind="OutputPin" />
                     </Node>
-                    <Node Bounds="530,428,55,19" Id="SHLtLx3QyBvMuMT3PhZDBF">
+                    <Node Bounds="529,428,55,19" Id="SHLtLx3QyBvMuMT3PhZDBF">
                       <p:NodeReference LastCategoryFullName="System.Conversion" LastSymbolSource="CoreLibBasics.vl">
                         <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                         <Choice Kind="OperationCallFlag" Name="ToString" />
@@ -525,9 +525,9 @@
       </Patch>
     </Node>
   </Patch>
-  <NugetDependency Id="BGzzw9eIkE9LblY9jxsgOJ" Location="VL.CoreLib" Version="2021.4.5" />
-  <NugetDependency Id="MdPCygr8T8pQJZ41Q8EtBg" Location="VL.Stride" Version="2021.4.5" />
-  <NugetDependency Id="Kh74cAddqsIOcRIskxOfm3" Location="VL.Stride.Runtime" Version="2021.4.5" />
+  <NugetDependency Id="BGzzw9eIkE9LblY9jxsgOJ" Location="VL.CoreLib" Version="2021.4.6" />
+  <NugetDependency Id="MdPCygr8T8pQJZ41Q8EtBg" Location="VL.Stride" Version="2021.4.6" />
+  <NugetDependency Id="Kh74cAddqsIOcRIskxOfm3" Location="VL.Stride.Runtime" Version="2021.4.6" />
   <PlatformDependency Id="RorTOvMwrVtLLDRXFbqxoG" Location="./lib/netstanderd2.0/Stride.Graphics.dll" />
   <PlatformDependency Id="UuYjpCh8TmeQMHFzoqqmcD" Location="./lib/netstandard2.0/VL.OpenEXR.dll" />
 </Document>

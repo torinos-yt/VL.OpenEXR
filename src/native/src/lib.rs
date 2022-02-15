@@ -1,6 +1,9 @@
+use std::fs::File;
+use std::io::BufReader;
 use std::os::raw::c_char;
 use std::mem;
 use std::ffi::CStr;
+use std::path::Path;
 use std::slice::from_raw_parts;
 
 use exr::prelude::*;
@@ -60,37 +63,55 @@ pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32,
 #[no_mangle]
 pub unsafe extern fn load_from_path(path: *const c_char, width: *mut i32, height: *mut i32, format: *mut i32) -> *mut [Sample;4] {
     let path_str = CStr::from_ptr(path).to_str().unwrap();
+    let extension = Path::new(path_str).extension().unwrap().to_str().unwrap();
 
-    match MetaData::read_from_file(path_str, false) {
-        Ok(meta) => {
-            let size = meta.headers[0].layer_size;
-            *width = size.0 as i32;
-            *height = size.1 as i32;
-        
-            let sample_type = meta.headers[0].channels.uniform_sample_type;
-        
-            match sample_type {
-                Some(v) => {
-                    *format = v as i32;
+    match extension {
+        "hdr" => {
+            let r = BufReader::new(File::open(path_str).unwrap());
+            let mut image = radiant::load(r).unwrap();
 
-                    match v {
-                        SampleType::F16 => load_exr_f16(path_str) as *mut [Sample;4],
-                        SampleType::F32 => load_exr_f32(path_str) as *mut [Sample;4],
-                        SampleType::U32 => load_exr_u32(path_str) as *mut [Sample;4]
+            *width = image.width as i32;
+            *height = image.height as i32;
+            *format = 3;
+
+            let ptr = image.data.as_mut_ptr();
+            mem::forget(image);
+
+            ptr as *mut [Sample;4]
+        },
+        _ => {
+            match MetaData::read_from_file(path_str, false) {
+                Ok(meta) => {
+                    let size = meta.headers[0].layer_size;
+                    *width = size.0 as i32;
+                    *height = size.1 as i32;
+                
+                    let sample_type = meta.headers[0].channels.uniform_sample_type;
+                
+                    match sample_type {
+                        Some(v) => {
+                            *format = v as i32;
+        
+                            match v {
+                                SampleType::F16 => load_exr_f16(path_str) as *mut [Sample;4],
+                                SampleType::F32 => load_exr_f32(path_str) as *mut [Sample;4],
+                                SampleType::U32 => load_exr_u32(path_str) as *mut [Sample;4]
+                            }
+                        },
+                        None => {
+                            *format = -1;
+                            std::ptr::null_mut() as *mut [Sample;4]
+                        }
                     }
                 },
-                None => {
+                Err(_e) => {
+                    *width = -1;
+                    *height = -1;
                     *format = -1;
-                    0usize as *mut [Sample;4]
+        
+                    std::ptr::null_mut() as *mut [Sample;4]
                 }
             }
-        },
-        Err(_e) => {
-            *width = -1;
-            *height = -1;
-            *format = -1;
-
-            0usize as *mut [Sample;4]
         }
     }
 }

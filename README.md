@@ -1,6 +1,6 @@
 VL.OpenEXR
 ========================
-This is simple [OpenEXR](https://www.openexr.com/) image format loader.
+This is simple [OpenEXR](https://www.openexr.com/) and Radiance HDR(.hdr) image format loader.
 
 Installation
 ------------------------
