@@ -15,7 +15,8 @@
   <files>
     <file src="..\*.vl" target="" exclude="" />
     <file src="..\help\*.vl" target="\help" exclude="" />
-    <file src="..\help\**\*.*" target="\help" exclude="" />
+    <file src="..\help\export\**\*.*" target="\help\export" exclude="" />
+    <file src="..\help\shaders\*.sdsl" target="\help\shaders" exclude="" />
     <file src="..\resources\*.exr" target="\resources" />
     <file src="..\lib\native\*.dll" target="\lib\native" />
     <file src="..\lib\netstandard2.0\*.dll" target="\lib\netstandard2.0" />
