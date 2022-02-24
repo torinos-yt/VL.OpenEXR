@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>VL.OpenEXR</id>
-    <version>0.2.0</version>
+    <version>0.3.0</version>
     <title>VL.OpenEXR</title>
     <authors>torinos</authors>
     <owners>torinos</owners>

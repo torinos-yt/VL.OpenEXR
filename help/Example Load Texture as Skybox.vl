@@ -14,7 +14,7 @@
       </p:NodeReference>
       <Patch Id="VnWWozZYndyMf9NPJEvbkF">
         <Canvas Id="T1zaEIgktPTLw8Ay7gGZG7" CanvasType="Group">
-          <Node Bounds="291,198,67,19" Id="NxMcZdR9aATNw6KSEAFsQA">
+          <Node Bounds="250,183,67,19" Id="NxMcZdR9aATNw6KSEAFsQA">
             <p:NodeReference LastCategoryFullName="OpenEXR" LastSymbolSource="VL.OpenEXR.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="FileTexture" />
@@ -100,12 +100,12 @@
             <Pin Id="O7NtWmg8cvWOBM9UQrONin" Name="Cull Mode" Kind="InputPin" />
             <Pin Id="GxrilvlnPbKM4LzGCsVtlI" Name="Output" Kind="OutputPin" />
           </Node>
-          <Pad Id="IMhNuRY6vk8PERDo13zTKI" Comment="Path" Bounds="293,165,165,15" ShowValueBox="true" isIOBox="true" Value="..\resources\OutdoorHDRI016_2K-HDR.exr">
+          <Pad Id="IMhNuRY6vk8PERDo13zTKI" Comment="Path" Bounds="252,150,165,15" ShowValueBox="true" isIOBox="true" Value="..\resources\OutdoorHDRI016_2K-HDR.exr">
             <p:TypeAnnotation LastCategoryFullName="IO" LastSymbolSource="CoreLibBasics.vl">
               <Choice Kind="TypeFlag" Name="Path" />
             </p:TypeAnnotation>
           </Pad>
-          <Pad Id="QPjSFjOgiUtN8XBR5gF6U7" Comment="Texture" Bounds="293,251,190,132" ShowValueBox="true" isIOBox="true" />
+          <Pad Id="QPjSFjOgiUtN8XBR5gF6U7" Comment="Texture" Bounds="252,236,190,132" ShowValueBox="true" isIOBox="true" />
           <Node Bounds="988,1195,67,19" Id="HaboswqnLTeO2OWHB9JYdO">
             <p:NodeReference LastCategoryFullName="OpenEXR" LastSymbolSource="VL.OpenEXR.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
@@ -115,7 +115,7 @@
             <Pin Id="QXLCmzRyXusMiaoh91L6e1" Name="Reload" Kind="InputPin" />
             <Pin Id="DWUt4jKnZzBLHH2KKHVil4" Name="Texture" Kind="OutputPin" />
           </Node>
-          <Node Bounds="559,198,67,19" Id="O10pmsMEMUbOtaKs4UpEsi">
+          <Node Bounds="555,185,67,19" Id="O10pmsMEMUbOtaKs4UpEsi">
             <p:NodeReference LastCategoryFullName="OpenEXR" LastSymbolSource="VL.OpenEXR.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="FileTexture" />
@@ -124,12 +124,12 @@
             <Pin Id="P5osDG6DhJSM6U45MufzGK" Name="Reload" Kind="InputPin" DefaultValue="False" />
             <Pin Id="QlGL3uhiLwBMA1yPZ72ULe" Name="Texture" Kind="OutputPin" />
           </Node>
-          <Pad Id="UXKMS2OHtl1OmGyA3m8J3Y" Comment="Path" Bounds="561,165,165,15" ShowValueBox="true" isIOBox="true" Value="..\resources\country_club_2k.hdr">
+          <Pad Id="UXKMS2OHtl1OmGyA3m8J3Y" Comment="Path" Bounds="557,152,165,15" ShowValueBox="true" isIOBox="true" Value="D:\Documents\Dev\VL.OpenEXR\resources\country_club_2k.hdr">
             <p:TypeAnnotation LastCategoryFullName="IO" LastSymbolSource="CoreLibBasics.vl">
               <Choice Kind="TypeFlag" Name="Path" />
             </p:TypeAnnotation>
           </Pad>
-          <Pad Id="Pu4wwZ1jYkfPg2mEj77DQW" Comment="Texture" Bounds="561,251,190,132" ShowValueBox="true" isIOBox="true" />
+          <Pad Id="Pu4wwZ1jYkfPg2mEj77DQW" Comment="Texture" Bounds="557,238,190,132" ShowValueBox="true" isIOBox="true" />
           <Node Bounds="420,436,45,19" Id="PWBzrVqA9MoMWxyg3XNyyY">
             <p:NodeReference LastCategoryFullName="Control" LastSymbolSource="CoreLibBasics.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
@@ -149,15 +149,8 @@
               <p:buttonmode p:Assembly="VL.UI.Forms" p:Type="VL.HDE.PatchEditor.Editors.ButtonModeEnum">Toggle</p:buttonmode>
             </p:ValueBoxSettings>
           </Pad>
-          <Pad Id="F2eF9KTaTZLNWh7ZSAmwiW" Bounds="547,54,262,93" ShowValueBox="true" isIOBox="true" Value="known issue:&#xD;&#xA;&#xD;&#xA;The process seems to hang when trying to load a high resolution .hdr format image (e.g. 10k or higher).">
-            <p:TypeAnnotation>
-              <Choice Kind="TypeFlag" Name="String" />
-            </p:TypeAnnotation>
-            <p:ValueBoxSettings>
-              <p:fontsize p:Type="Int32">9</p:fontsize>
-              <p:stringtype p:Assembly="VL.Core" p:Type="VL.Core.StringType">Comment</p:stringtype>
-            </p:ValueBoxSettings>
-          </Pad>
+          <Overlay Id="OL6j6XbKWnBNdYY2Z07FrZ" Name="Load EXR" Bounds="232,114,268,261" />
+          <Overlay Id="UUkOWYDNuNhMcGPlX42nNm" Name="Load HDR" Bounds="529,115,275,263" />
         </Canvas>
         <Patch Id="O9xJLBchsLVNYbUACiJ0lm" Name="Create" />
         <Patch Id="Ki1hvooTsWhP2jkewEfAY9" Name="Update" />

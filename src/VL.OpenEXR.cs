@@ -21,15 +21,16 @@ namespace OpenEXR
         [DllImport("../native/VL.OpenEXR.Native.dll")]
         static extern IntPtr load_from_path(string path, out int width, out int height, out ExrPixelFormat format);
 
-        public static byte[] LoadFromPath(string path, out int width, out int height, out PixelFormat format)
+        public static Texture LoadFromPath(string path, GraphicsDevice device, CommandList commandList)
         {
             ExrPixelFormat exrFormat;
-            IntPtr ptr = load_from_path(path, out width, out height, out exrFormat);
+            PixelFormat format;
+            IntPtr ptr = load_from_path(path, out var width, out var height, out exrFormat);
 
             if(exrFormat == ExrPixelFormat.Unknown || ptr == IntPtr.Zero)
             {
                 format = PixelFormat.None;
-                return new byte[0];
+                return null;
             }
             
             int sizeInBytes = 0;
@@ -43,12 +44,14 @@ namespace OpenEXR
                 _ => (PixelFormat.None, 0, false),
             };
 
-            var array = new byte[width * height * (hasAlpha?4:3) * sizeInBytes];
-            Marshal.Copy(ptr, array, 0, array.Length);
+            var dataPointer = new DataPointer(ptr, width * height * (hasAlpha?4:3) * sizeInBytes);
+
+            var texture = Texture.New2D(device, width, height, format);
+            texture.SetData(commandList, dataPointer);
 
             Marshal.FreeCoTaskMem(ptr);
 
-            return array;
+            return texture;
         }
     }
 
