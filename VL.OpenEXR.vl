@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Document xmlns:p="property" Id="KKFE0MPJIc6LlWOjcXeMEx" LanguageVersion="2021.4.6.835" Version="0.128">
+<Document xmlns:p="property" Id="KKFE0MPJIc6LlWOjcXeMEx" LanguageVersion="2021.4.7.906" Version="0.128">
   <Patch Id="IbW8cR8uZ8rOQKPIBfaIVA">
     <Canvas Id="BdoB2gFaudQPle25UEBSrc" DefaultCategory="Main" CanvasType="FullCategory">
       <!--
@@ -83,7 +83,7 @@
               <Pin Id="LH1ShzsgrITQdqzURExFSI" Name="Input 2" Kind="InputPin" />
               <Pin Id="RXJEzwsf45YOhg2Ha2ckUF" Name="Output" Kind="StateOutputPin" />
             </Node>
-            <Node Bounds="559,287,40,26" Id="QxavksqqwNZOCT380wBOBb">
+            <Node Bounds="560,285,40,26" Id="QxavksqqwNZOCT380wBOBb">
               <p:NodeReference LastCategoryFullName="IO.Path" LastSymbolSource="CoreLibBasics.vl">
                 <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                 <Choice Kind="OperationCallFlag" Name="IsFile" />
@@ -123,6 +123,23 @@
               <Pin Id="JiPYN2UzRooPEwlY407cQG" Name="Output" Kind="OutputPin" />
             </Node>
             <Pad Id="ILfpsWWX7MFMXpfQn0sikV" SlotId="AyauMdoYIlLMsu2Uwqa14o" Bounds="675,321" />
+            <Node Bounds="579,330,59,26" Id="NOBbg9gqWN8L84DyBJh1oD">
+              <p:NodeReference LastCategoryFullName="IO.Path" LastSymbolSource="CoreLibBasics.vl">
+                <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
+                <Choice Kind="OperationCallFlag" Name="FileExists" />
+              </p:NodeReference>
+              <Pin Id="FuCwjr1ALzMP9wzoEP6abX" Name="Input" Kind="StateInputPin" />
+              <Pin Id="GA1YmU2BLsgPl4cAB2E7DW" Name="Exists" Kind="OutputPin" />
+            </Node>
+            <Node Bounds="547,366,37,19" Id="RAqfGCWPjMrL962cJ3td4F">
+              <p:NodeReference LastCategoryFullName="Primitive.Boolean" LastSymbolSource="CoreLibBasics.vl">
+                <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
+                <Choice Kind="OperationCallFlag" Name="AND" />
+              </p:NodeReference>
+              <Pin Id="MaG7hmGEtifNvNwbsSKc1o" Name="Input" Kind="StateInputPin" />
+              <Pin Id="TC7Kx8PNFk3LnfzLN3M8cL" Name="Input 2" Kind="InputPin" />
+              <Pin Id="GJUh5oFameqMXHHdxv9xIc" Name="Output" Kind="StateOutputPin" />
+            </Node>
           </Canvas>
           <ProcessDefinition Id="HOTqrhAmJsIQLXEURFZ6CN">
             <Fragment Id="OXfqGzP4I1ENkyZNS7j7uW" Patch="UPTDYLXB0k3O3MLDSnEj5J" Enabled="true" />
@@ -150,7 +167,6 @@
           </Patch>
           <Link Id="FhLBQNxK6sdNG81oUVSsoL" Ids="UQnzBSrBmKYNRYKlYDqjXc,LH1ShzsgrITQdqzURExFSI" />
           <Link Id="NxKyfRFsG8SO7pdaaEMgOx" Ids="PUANxWaQewLLwPr6gFC2sE,OJbKkQ1ltvKLx1hHbhtMpa" />
-          <Link Id="IoOXEP4IVMmOx0XaF7IBZ9" Ids="UQnzBSrBmKYNRYKlYDqjXc,BUDsWAEkGCQMJn1G1TSD5T" />
           <Link Id="KQstJyVADOGQDjJkhukdBJ" Ids="FGtVHzHHDEqQCVzY8AuLoy,R8WOqVg7VUQQDN4TKQgQom" IsFeedback="true" />
           <Link Id="LSsOaJoFSRvMizt1ELjj4h" Ids="R8WOqVg7VUQQDN4TKQgQom,ALUFsJ0Fw6LMAmwlGlwdPy" />
           <Link Id="N68mBTZOBJbMZO4M3bYfHq" Ids="FLpemKM5uBaQANjQzXtmNS,R8WOqVg7VUQQDN4TKQgQom" />
@@ -161,6 +177,10 @@
           <Link Id="K91yBrPYMtnOaOnqDotXYJ" Ids="JiPYN2UzRooPEwlY407cQG,ILfpsWWX7MFMXpfQn0sikV" />
           <Slot Id="AyauMdoYIlLMsu2Uwqa14o" Name="device" />
           <Link Id="BKK0jzLm7rKQbartNx1lDV" Ids="ILfpsWWX7MFMXpfQn0sikV,DVYrKsJjVpKQBcZP7bvjFc" />
+          <Link Id="LfhopK52WMtLlFvbOr7Eis" Ids="ODKqz4cv9JgNMnHTkNfrCn,FuCwjr1ALzMP9wzoEP6abX" />
+          <Link Id="UUV0n0TIxaOLtB688Qv3H7" Ids="UQnzBSrBmKYNRYKlYDqjXc,MaG7hmGEtifNvNwbsSKc1o" />
+          <Link Id="OJ7U7nvC5jiM1dSRNtvoBb" Ids="GA1YmU2BLsgPl4cAB2E7DW,TC7Kx8PNFk3LnfzLN3M8cL" />
+          <Link Id="DRd98RRlbjXLAQqJWrU7jL" Ids="GJUh5oFameqMXHHdxv9xIc,BUDsWAEkGCQMJn1G1TSD5T" />
         </Patch>
       </Node>
       <!--
@@ -520,9 +540,9 @@
       </Patch>
     </Node>
   </Patch>
-  <NugetDependency Id="BGzzw9eIkE9LblY9jxsgOJ" Location="VL.CoreLib" Version="2021.4.6" />
-  <NugetDependency Id="MdPCygr8T8pQJZ41Q8EtBg" Location="VL.Stride" Version="2021.4.6" />
-  <NugetDependency Id="Kh74cAddqsIOcRIskxOfm3" Location="VL.Stride.Runtime" Version="2021.4.6" />
+  <NugetDependency Id="BGzzw9eIkE9LblY9jxsgOJ" Location="VL.CoreLib" Version="2021.4.7" />
+  <NugetDependency Id="MdPCygr8T8pQJZ41Q8EtBg" Location="VL.Stride" Version="2021.4.7" />
+  <NugetDependency Id="Kh74cAddqsIOcRIskxOfm3" Location="VL.Stride.Runtime" Version="2021.4.7" />
   <PlatformDependency Id="RorTOvMwrVtLLDRXFbqxoG" Location="./lib/netstanderd2.0/Stride.Graphics.dll" />
   <PlatformDependency Id="UuYjpCh8TmeQMHFzoqqmcD" Location="./lib/netstandard2.0/VL.OpenEXR.dll" />
 </Document>

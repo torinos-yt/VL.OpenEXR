@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
   <metadata>
     <id>VL.OpenEXR</id>
-    <version>0.3.0</version>
+    <version>0.3.1</version>
     <title>VL.OpenEXR</title>
     <authors>torinos</authors>
     <owners>torinos</owners>
@@ -17,7 +17,7 @@
     <file src="..\help\*.vl" target="\help" exclude="" />
     <file src="..\help\export\**\*.*" target="\help\export" exclude="" />
     <file src="..\help\shaders\*.sdsl" target="\help\shaders" exclude="" />
-    <file src="..\resources\*.exr" target="\resources" />
+    <file src="..\resources\*.*" target="\resources" />
     <file src="..\lib\native\*.dll" target="\lib\native" />
     <file src="..\lib\netstandard2.0\*.dll" target="\lib\netstandard2.0" />
   </files>
