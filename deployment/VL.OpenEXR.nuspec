@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
-<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+<package xmlns="http://schemas.microsoft.com/packaging/2013/05/nuspec.xsd">
   <metadata>
     <id>VL.OpenEXR</id>
-    <version>0.3.1</version>
+    <version>0.3.2</version>
     <title>VL.OpenEXR</title>
     <authors>torinos</authors>
     <owners>torinos</owners>

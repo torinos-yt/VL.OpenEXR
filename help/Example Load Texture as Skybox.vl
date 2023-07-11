@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Document xmlns:p="property" Id="Rcu3NDFVVYdL9QMaVXfuME" LanguageVersion="2021.4.7.906" Version="0.128">
+<Document xmlns:p="property" xmlns:r="reflection" Id="Rcu3NDFVVYdL9QMaVXfuME" LanguageVersion="2023.5.2" Version="0.128">
   <Patch Id="QcyBSDz9jgYPBJjrZl6tIT">
     <Canvas Id="Rh5YsOfHFh6OF2E4UspMnI" DefaultCategory="Main" BordersChecked="false" CanvasType="FullCategory" />
     <!--
@@ -15,7 +15,7 @@
       <Patch Id="VnWWozZYndyMf9NPJEvbkF">
         <Canvas Id="T1zaEIgktPTLw8Ay7gGZG7" CanvasType="Group">
           <Node Bounds="250,183,67,19" Id="NxMcZdR9aATNw6KSEAFsQA">
-            <p:NodeReference LastCategoryFullName="OpenEXR" LastSymbolSource="VL.OpenEXR.vl">
+            <p:NodeReference LastCategoryFullName="OpenEXR" LastDependency="VL.OpenEXR.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="FileTexture" />
             </p:NodeReference>
@@ -24,7 +24,7 @@
             <Pin Id="AdhWUJ9jsMZNLHfnLJhtxp" Name="Texture" Kind="OutputPin" />
           </Node>
           <Node Bounds="413,470,212,19" Id="L9PtcZwjCECP42RqaVaNL1">
-            <p:NodeReference LastCategoryFullName="Stride.Lights" LastSymbolSource="VL.Stride.Engine.vl">
+            <p:NodeReference LastCategoryFullName="Stride.Lights" LastDependency="VL.Stride.Engine.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="SkyboxLight" />
             </p:NodeReference>
@@ -42,7 +42,7 @@
             <Pin Id="VH5tdRcfi7TOwjVyT6pUlr" Name="Entity" Kind="OutputPin" />
           </Node>
           <Node Bounds="369,541,63,19" Id="NV1DXweA0mqOxvuj68SVDz">
-            <p:NodeReference LastCategoryFullName="Stride" LastSymbolSource="VL.Stride.Engine.vl">
+            <p:NodeReference LastCategoryFullName="Stride" LastDependency="VL.Stride.Engine.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="RootScene" />
               <CategoryReference Kind="Category" Name="Stride" NeedsToBeDirectParent="true" />
@@ -53,7 +53,7 @@
             <Pin Id="EGcKTYU8SLxOtMD1GXLdu3" Name="Output" Kind="OutputPin" />
           </Node>
           <Node Bounds="209,487,165,19" Id="HTgoNdpgFxjOE5zYygbrOI">
-            <p:NodeReference LastCategoryFullName="Stride.Models" LastSymbolSource="VL.Stride.Engine.vl">
+            <p:NodeReference LastCategoryFullName="Stride.Models" LastDependency="VL.Stride.Engine.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="Sphere" />
             </p:NodeReference>
@@ -68,8 +68,8 @@
             <Pin Id="IpekcZeRQYALEaf7y9yRwD" Name="Enabled" Kind="InputPin" />
             <Pin Id="Ozch59Y077ZQFrrgEhPqbg" Name="Entity" Kind="OutputPin" />
           </Node>
-          <Node Bounds="349,578,205,19" Id="IeW25HXQQPcNuAPXPZVdrA">
-            <p:NodeReference LastCategoryFullName="Stride" LastSymbolSource="VL.Stride.Engine.vl">
+          <Node Bounds="349,578,225,19" Id="IeW25HXQQPcNuAPXPZVdrA">
+            <p:NodeReference LastCategoryFullName="Stride" LastDependency="VL.Stride.Engine.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="SceneWindow" />
             </p:NodeReference>
@@ -84,12 +84,13 @@
             <Pin Id="DUySGYa2k7ANAzBk72OUCM" Name="Enable Default Post Effects" Kind="InputPin" />
             <Pin Id="SK0ohnM4lmhPUPZy0xdbKK" Name="Enable Keyboard Shortcuts" Kind="InputPin" />
             <Pin Id="KFg87eeAPdiMt1VjVQcxnQ" Name="Enabled" Kind="InputPin" />
+            <Pin Id="RRoMQzXyOW2NZdvgQeWLyw" Name="Present Interval" Kind="InputPin" />
             <Pin Id="FpYR1TvIcgOLRjtr7HPLlv" Name="Output" Kind="OutputPin" />
             <Pin Id="Lh8ibMMkSRDMUAxFi3UAMs" Name="Client Bounds" Kind="OutputPin" />
             <Pin Id="QSy1J9GYU6lMzQA86IsOag" Name="Input Source" Kind="OutputPin" />
           </Node>
           <Node Bounds="269,452,85,19" Id="VyxfmtSS0rXNjwfNC1Wof5">
-            <p:NodeReference LastCategoryFullName="Stride.Materials" LastSymbolSource="VL.Stride.Rendering.ShaderFX.vl">
+            <p:NodeReference LastCategoryFullName="Stride.Materials" LastDependency="VL.Stride.Rendering.ShaderFX.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="PBRMaterial" />
             </p:NodeReference>
@@ -101,13 +102,13 @@
             <Pin Id="GxrilvlnPbKM4LzGCsVtlI" Name="Output" Kind="OutputPin" />
           </Node>
           <Pad Id="IMhNuRY6vk8PERDo13zTKI" Comment="Path" Bounds="252,150,165,15" ShowValueBox="true" isIOBox="true" Value="..\resources\OutdoorHDRI016_2K-HDR.exr">
-            <p:TypeAnnotation LastCategoryFullName="IO" LastSymbolSource="CoreLibBasics.vl">
+            <p:TypeAnnotation LastCategoryFullName="IO" LastDependency="CoreLibBasics.vl">
               <Choice Kind="TypeFlag" Name="Path" />
             </p:TypeAnnotation>
           </Pad>
           <Pad Id="QPjSFjOgiUtN8XBR5gF6U7" Comment="Texture" Bounds="252,236,190,132" ShowValueBox="true" isIOBox="true" />
           <Node Bounds="988,1195,67,19" Id="HaboswqnLTeO2OWHB9JYdO">
-            <p:NodeReference LastCategoryFullName="OpenEXR" LastSymbolSource="VL.OpenEXR.vl">
+            <p:NodeReference LastCategoryFullName="OpenEXR" LastDependency="VL.OpenEXR.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="FileTexture" />
             </p:NodeReference>
@@ -116,7 +117,7 @@
             <Pin Id="DWUt4jKnZzBLHH2KKHVil4" Name="Texture" Kind="OutputPin" />
           </Node>
           <Node Bounds="555,185,67,19" Id="O10pmsMEMUbOtaKs4UpEsi">
-            <p:NodeReference LastCategoryFullName="OpenEXR" LastSymbolSource="VL.OpenEXR.vl">
+            <p:NodeReference LastCategoryFullName="OpenEXR" LastDependency="VL.OpenEXR.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="ProcessAppFlag" Name="FileTexture" />
             </p:NodeReference>
@@ -125,13 +126,13 @@
             <Pin Id="QlGL3uhiLwBMA1yPZ72ULe" Name="Texture" Kind="OutputPin" />
           </Node>
           <Pad Id="UXKMS2OHtl1OmGyA3m8J3Y" Comment="Path" Bounds="557,152,119,15" ShowValueBox="true" isIOBox="true" Value="..\resources\country_club_2k.hdr">
-            <p:TypeAnnotation LastCategoryFullName="IO" LastSymbolSource="CoreLibBasics.vl">
+            <p:TypeAnnotation LastCategoryFullName="IO" LastDependency="CoreLibBasics.vl">
               <Choice Kind="TypeFlag" Name="Path" />
             </p:TypeAnnotation>
           </Pad>
           <Pad Id="Pu4wwZ1jYkfPg2mEj77DQW" Comment="Texture" Bounds="557,238,190,132" ShowValueBox="true" isIOBox="true" />
           <Node Bounds="420,436,45,19" Id="PWBzrVqA9MoMWxyg3XNyyY">
-            <p:NodeReference LastCategoryFullName="Control" LastSymbolSource="CoreLibBasics.vl">
+            <p:NodeReference LastCategoryFullName="Control" LastDependency="CoreLibBasics.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <Choice Kind="OperationCallFlag" Name="Switch (Boolean)" />
             </p:NodeReference>
@@ -141,7 +142,7 @@
             <Pin Id="PVqgAzGo4TNMOVocJydfeS" Name="Output" Kind="OutputPin" />
           </Node>
           <Pad Id="Rnqn3hITq8RNAqByOrFVLv" Comment="Condition" Bounds="403,392,35,35" ShowValueBox="true" isIOBox="true" Value="False">
-            <p:TypeAnnotation>
+            <p:TypeAnnotation LastCategoryFullName="Primitive" LastDependency="VL.CoreLib.vl">
               <Choice Kind="ImmutableTypeFlag" Name="Boolean" />
               <FullNameCategoryReference ID="Primitive" />
             </p:TypeAnnotation>
@@ -173,8 +174,8 @@
       </Patch>
     </Node>
   </Patch>
-  <NugetDependency Id="TugQA41hz6gMTQv2Ue3Tha" Location="VL.CoreLib" Version="2021.4.7" />
+  <NugetDependency Id="TugQA41hz6gMTQv2Ue3Tha" Location="VL.CoreLib" Version="2023.5.2" />
   <DocumentDependency Id="PKrJRPztKCDOettEG9UaO7" Location="../VL.OpenEXR.vl" />
-  <NugetDependency Id="EARv94p4Aj5N8NlvBot5uY" Location="VL.Stride" Version="2021.4.7" />
-  <NugetDependency Id="DrlANwRD6NILKp7OcAxxLc" Location="VL.Stride.Runtime" Version="2021.4.7" />
+  <NugetDependency Id="EARv94p4Aj5N8NlvBot5uY" Location="VL.Stride" Version="2023.5.2" />
+  <NugetDependency Id="DrlANwRD6NILKp7OcAxxLc" Location="VL.Stride.Runtime" Version="2023.5.2" />
 </Document>
