@@ -13,6 +13,13 @@ namespace OpenEXR
         RGBF32 = 3
     }
 
+    public enum ExrEncoding {
+        FastLossless = 0,
+        SmallFastLossless = 1,
+        SmallLossless = 2,
+        Uncompressed = 3,
+    }
+
     public static class ExrLoader
     {
         #pragma warning disable CA5393
@@ -32,7 +39,7 @@ namespace OpenEXR
                 format = PixelFormat.None;
                 return null;
             }
-            
+
             int sizeInBytes = 0;
             bool hasAlpha = true;
             (format, sizeInBytes, hasAlpha) = exrFormat switch
@@ -61,9 +68,9 @@ namespace OpenEXR
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 
         [DllImport("../native/VL.OpenEXR.Native.dll")]
-        static extern void write_texture(string path, int width, int height, ExrPixelFormat format, IntPtr data);
-        
-        public static void WriteTexture(byte[] data, string path, int width, int height, PixelFormat format)
+        static extern void write_texture(string path, int width, int height, ExrPixelFormat format, ExrEncoding encoding, IntPtr data);
+
+        public static void WriteTexture(byte[] data, string path, int width, int height, PixelFormat format, ExrEncoding encoding)
         {
             ExrPixelFormat exrFormat = format switch
             {
@@ -78,7 +85,7 @@ namespace OpenEXR
             GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
             try
             {
-                write_texture(path, width, height, exrFormat, handle.AddrOfPinnedObject());
+                write_texture(path, width, height, exrFormat, encoding, handle.AddrOfPinnedObject());
             }
             catch(Exception e)
             {

@@ -1,3 +1,4 @@
+use std::borrow::Cow;
 use std::fs::File;
 use std::io::BufReader;
 use std::os::raw::c_char;
@@ -6,58 +7,90 @@ use std::ffi::CStr;
 use std::path::Path;
 use std::slice::from_raw_parts;
 
+use exr::error::UnitResult;
 use exr::prelude::*;
 
-#[no_mangle]
-pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32, format: i32, data: *const Sample) {
-    let path_str = CStr::from_ptr(path).to_str().unwrap();
+#[derive(Clone, Copy, Debug)]
+#[repr(u32)]
+pub enum ExrEncoding {
+    FastLossless = 0,
+    SmallFastLossless = 1,
+    SmallLossless = 2,
+    Uncompressed = 3,
+}
 
-    match format {
-        0 => { // U32
+#[derive(Clone, Copy, Debug)]
+#[repr(i32)]
+pub enum ExrPixelFormat
+{
+    Unknown = -1,
+    U32 = 0,
+    F16 = 1,
+    F32 = 2,
+    RGBF32 = 3
+}
+
+#[no_mangle]
+pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32, format: ExrPixelFormat, encoding: ExrEncoding, data: *const Sample) -> i32 {
+    let path = match CStr::from_ptr(path).to_str() {
+        Ok(path) => path,
+        Err(err) => {
+            println!("{err}");
+            return 1
+        }
+    };
+
+    let result = match format {
+        ExrPixelFormat::U32 => {
             let ptr = data as *const u32;
             let array = from_raw_parts(ptr, (width * height * 4) as usize);
-            write_rgba_file(
-                path_str,
-                width as usize, height as usize,
-                |x,y| (
-                    array[(y * (width as usize) + x) * 4 + 0],
-                    array[(y * (width as usize) + x) * 4 + 1],
-                    array[(y * (width as usize) + x) * 4 + 2],
-                    array[(y * (width as usize) + x) * 4 + 3]
-                )
-            ).unwrap();
+            write_exr(path, array, width as usize, height as usize, encoding)
         },
-        1 => { // F16
+        ExrPixelFormat::F16 => {
             let ptr = data as *const f16;
             let array = from_raw_parts(ptr, (width * height * 4) as usize);
-            write_rgba_file(
-                path_str,
-                width as usize, height as usize,
-                |x,y| (
-                    array[(y * (width as usize) + x) * 4 + 0],
-                    array[(y * (width as usize) + x) * 4 + 1],
-                    array[(y * (width as usize) + x) * 4 + 2],
-                    array[(y * (width as usize) + x) * 4 + 3]
-                )
-            ).unwrap();
+            write_exr(path, array, width as usize, height as usize, encoding)
         },
-        2 => { // F32
+        ExrPixelFormat::F32 => {
             let ptr = data as *const f32;
             let array = from_raw_parts(ptr, (width * height * 4) as usize);
-            write_rgba_file(
-                path_str,
-                width as usize, height as usize,
-                |x,y| (
-                    array[(y * (width as usize) + x) * 4 + 0],
-                    array[(y * (width as usize) + x) * 4 + 1],
-                    array[(y * (width as usize) + x) * 4 + 2],
-                    array[(y * (width as usize) + x) * 4 + 3]
-                )
-            ).unwrap();
+            write_exr(path, array, width as usize, height as usize, encoding)
         }
-        _ => { // Unknown
+        _ => {
+            // Unknown
+            Err(Error::NotSupported(Cow::Owned(format!("Encoding {encoding:?} not supported"))))
         }
+    };
+
+    match result {
+        Ok(()) => 0,
+        Err(err) => {
+            println!("{err}");
+            1
+        },
     }
+}
+
+fn write_exr<T: IntoSample>(path: impl AsRef<Path>, array: &[T], width: usize, height: usize, encoding: ExrEncoding) -> UnitResult {
+    let channels = SpecificChannels::rgba(|Vec2(x,y)| (
+        array[(y * (width as usize) + x) * 4 + 0],
+        array[(y * (width as usize) + x) * 4 + 1],
+        array[(y * (width as usize) + x) * 4 + 2],
+        array[(y * (width as usize) + x) * 4 + 3]
+    ));
+    let encoding = match encoding  {
+        ExrEncoding::FastLossless => Encoding::FAST_LOSSLESS,
+        ExrEncoding::SmallFastLossless => Encoding::SMALL_FAST_LOSSLESS,
+        ExrEncoding::SmallLossless => Encoding::SMALL_LOSSLESS,
+        ExrEncoding::Uncompressed => Encoding::UNCOMPRESSED,
+    };
+    let layer = Layer::new(
+        Vec2(width as usize, height as usize),
+        LayerAttributes::named("first layer"),
+        encoding,
+        channels
+    );
+    Image::from_layer(layer).write().to_file(path)
 }
 
 #[no_mangle]
@@ -85,13 +118,13 @@ pub unsafe extern fn load_from_path(path: *const c_char, width: *mut i32, height
                     let size = meta.headers[0].layer_size;
                     *width = size.0 as i32;
                     *height = size.1 as i32;
-                
+
                     let sample_type = meta.headers[0].channels.uniform_sample_type;
-                
+
                     match sample_type {
                         Some(v) => {
                             *format = v as i32;
-        
+
                             match v {
                                 SampleType::F16 => load_exr_f16(path_str) as *mut [Sample;4],
                                 SampleType::F32 => load_exr_f32(path_str) as *mut [Sample;4],
@@ -108,7 +141,7 @@ pub unsafe extern fn load_from_path(path: *const c_char, width: *mut i32, height
                     *width = -1;
                     *height = -1;
                     *format = -1;
-        
+
                     std::ptr::null_mut() as *mut [Sample;4]
                 }
             }
@@ -134,7 +167,7 @@ fn load_exr_f16(path: &str) -> usize {
     let mut pixel = image.layer_data.channel_data.pixels.into_iter().flatten().collect::<Vec<[f16;4]>>();
     let ptr = pixel.as_mut_ptr();
     mem::forget(pixel);
-    
+
     return unsafe { mem::transmute(ptr) };
 }
 
@@ -156,7 +189,7 @@ fn load_exr_f32(path: &str) -> usize {
     let mut pixel = image.layer_data.channel_data.pixels.into_iter().flatten().collect::<Vec<[f32;4]>>();
     let ptr = pixel.as_mut_ptr();
     mem::forget(pixel);
-    
+
     return unsafe { mem::transmute(ptr) };
 }
 
@@ -178,7 +211,7 @@ fn load_exr_u32(path: &str) -> usize {
     let mut pixel = image.layer_data.channel_data.pixels.into_iter().flatten().collect::<Vec<[u32;4]>>();
     let ptr = pixel.as_mut_ptr();
     mem::forget(pixel);
-    
+
     return unsafe { mem::transmute(ptr) };
 }
 
@@ -202,6 +235,6 @@ fn load_exr_u32(path: &str) -> usize {
 //     let mut pixel = image.layer_data.channel_data.pixels.into_iter().flatten().collect::<Vec<[Sample;4]>>();
 //     let ptr = pixel.as_mut_ptr();
 //     mem::forget(pixel);
-    
+
 //     return unsafe { mem::transmute(ptr) };
 // }

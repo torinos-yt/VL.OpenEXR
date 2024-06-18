@@ -9,7 +9,7 @@ name = "vl_openexr_native"
 crate-type = ["cdylib"]
 
 [dependencies]
-exr = "1.4.1"
+exr = "1.72.0"
 radiant = "0.3.0"
 
 [profile.release]
