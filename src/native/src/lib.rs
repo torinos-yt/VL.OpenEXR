@@ -74,16 +74,34 @@ pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32,
 
 fn write_exr<T: IntoSample>(path: impl AsRef<Path>, array: &[T], width: usize, height: usize, encoding: ExrEncoding) -> UnitResult {
     let channels = SpecificChannels::rgba(|Vec2(x,y)| (
-        array[(y * (width as usize) + x) * 4 + 0],
-        array[(y * (width as usize) + x) * 4 + 1],
-        array[(y * (width as usize) + x) * 4 + 2],
-        array[(y * (width as usize) + x) * 4 + 3]
+        array[(y * width + x) * 4 + 0],
+        array[(y * width + x) * 4 + 1],
+        array[(y * width + x) * 4 + 2],
+        array[(y * width + x) * 4 + 3]
     ));
     let encoding = match encoding  {
-        ExrEncoding::Uncompressed => Encoding::UNCOMPRESSED,
-        ExrEncoding::RLE => Encoding::FAST_LOSSLESS,
-        ExrEncoding::ZIP16 => Encoding::SMALL_FAST_LOSSLESS,
-        ExrEncoding::PIZ => Encoding::SMALL_LOSSLESS,
+        // See encoding presets but expanded here to make clearer the
+        // encoding compression
+        ExrEncoding::Uncompressed => Encoding {
+            compression: Compression::Uncompressed,
+            blocks: Blocks::ScanLines, // longest lines, faster memcpy
+            line_order: LineOrder::Increasing // presumably fastest?
+        },
+        ExrEncoding::RLE => Encoding {
+            compression: Compression::RLE,
+            blocks: Blocks::Tiles(Vec2(64, 64)), // optimize for RLE compression
+            line_order: LineOrder::Unspecified
+        },
+        ExrEncoding::ZIP16 => Encoding {
+            compression: Compression::ZIP16,
+            blocks: Blocks::ScanLines, // largest possible, but also with high probability of parallel workers
+            line_order: LineOrder::Increasing
+        },
+        ExrEncoding::PIZ => Encoding {
+            compression: Compression::PIZ,
+            blocks: Blocks::Tiles(Vec2(256, 256)),
+            line_order: LineOrder::Unspecified
+        },
         ExrEncoding::ZIP1 => Encoding {
             compression: Compression::ZIP1,
             blocks: Blocks::ScanLines,
@@ -91,7 +109,7 @@ fn write_exr<T: IntoSample>(path: impl AsRef<Path>, array: &[T], width: usize, h
         }
     };
     let layer = Layer::new(
-        Vec2(width as usize, height as usize),
+        Vec2(width, height),
         LayerAttributes::named("first layer"),
         encoding,
         channels
