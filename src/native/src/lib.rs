@@ -13,10 +13,11 @@ use exr::prelude::*;
 #[derive(Clone, Copy, Debug)]
 #[repr(u32)]
 pub enum ExrEncoding {
-    FastLossless = 0,
-    SmallFastLossless = 1,
-    SmallLossless = 2,
-    Uncompressed = 3,
+    Uncompressed = 0,
+    RLE = 1,
+    ZIP1 = 2,
+    ZIP16 = 3,
+    PIZ = 4,
 }
 
 #[derive(Clone, Copy, Debug)]
@@ -79,10 +80,15 @@ fn write_exr<T: IntoSample>(path: impl AsRef<Path>, array: &[T], width: usize, h
         array[(y * (width as usize) + x) * 4 + 3]
     ));
     let encoding = match encoding  {
-        ExrEncoding::FastLossless => Encoding::FAST_LOSSLESS,
-        ExrEncoding::SmallFastLossless => Encoding::SMALL_FAST_LOSSLESS,
-        ExrEncoding::SmallLossless => Encoding::SMALL_LOSSLESS,
         ExrEncoding::Uncompressed => Encoding::UNCOMPRESSED,
+        ExrEncoding::RLE => Encoding::FAST_LOSSLESS,
+        ExrEncoding::ZIP16 => Encoding::SMALL_FAST_LOSSLESS,
+        ExrEncoding::PIZ => Encoding::SMALL_LOSSLESS,
+        ExrEncoding::ZIP1 => Encoding {
+            compression: Compression::ZIP1,
+            blocks: Blocks::ScanLines,
+            line_order: LineOrder::Increasing
+        }
     };
     let layer = Layer::new(
         Vec2(width as usize, height as usize),

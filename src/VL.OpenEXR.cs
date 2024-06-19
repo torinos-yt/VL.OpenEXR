@@ -14,10 +14,11 @@ namespace OpenEXR
     }
 
     public enum ExrEncoding {
-        FastLossless = 0,
-        SmallFastLossless = 1,
-        SmallLossless = 2,
-        Uncompressed = 3,
+        Uncompressed = 0,
+        RLE = 1,
+        ZIP1 = 2,
+        ZIP16 = 3,
+        PIZ = 4,
     }
 
     public static class ExrLoader
@@ -68,7 +69,7 @@ namespace OpenEXR
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 
         [DllImport("../native/VL.OpenEXR.Native.dll")]
-        static extern void write_texture(string path, int width, int height, ExrPixelFormat format, ExrEncoding encoding, IntPtr data);
+        static extern Int32 write_texture(string path, int width, int height, ExrPixelFormat format, ExrEncoding encoding, IntPtr data);
 
         public static void WriteTexture(byte[] data, string path, int width, int height, PixelFormat format, ExrEncoding encoding)
         {
