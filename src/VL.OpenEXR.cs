@@ -29,7 +29,7 @@ namespace OpenEXR
         [DllImport("../native/VL.OpenEXR.Native.dll")]
         static extern IntPtr load_from_path(string path, out int width, out int height, out ExrPixelFormat format);
 
-        public static Texture LoadFromPath(string path, GraphicsDevice device, CommandList commandList)
+        public static Texture LoadFromPath(string path, GraphicsDevice device)
         {
             ExrPixelFormat exrFormat;
             PixelFormat format;
@@ -52,10 +52,12 @@ namespace OpenEXR
                 _ => (PixelFormat.None, 0, false),
             };
 
-            var dataPointer = new DataPointer(ptr, width * height * (hasAlpha?4:3) * sizeInBytes);
+            var rowPitch = width * (hasAlpha ? 4 : 3) * sizeInBytes;
 
-            var texture = Texture.New2D(device, width, height, format);
-            texture.SetData(commandList, dataPointer);
+            var texture = Texture.New(
+                device,
+                TextureDescription.New2D(width, height, format, usage: GraphicsResourceUsage.Immutable),
+                new DataBox(ptr, rowPitch, rowPitch * height));
 
             Marshal.FreeCoTaskMem(ptr);
 
