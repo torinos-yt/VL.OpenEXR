@@ -13,6 +13,14 @@ namespace OpenEXR
         RGBF32 = 3
     }
 
+    public enum ExrEncoding {
+        Uncompressed = 0,
+        RLE = 1,
+        ZIP1 = 2,
+        ZIP16 = 3,
+        PIZ = 4,
+    }
+
     public static class ExrLoader
     {
         #pragma warning disable CA5393
@@ -21,7 +29,7 @@ namespace OpenEXR
         [DllImport("../native/VL.OpenEXR.Native.dll")]
         static extern IntPtr load_from_path(string path, out int width, out int height, out ExrPixelFormat format);
 
-        public static Texture LoadFromPath(string path, GraphicsDevice device, CommandList commandList)
+        public static Texture LoadFromPath(string path, GraphicsDevice device)
         {
             ExrPixelFormat exrFormat;
             PixelFormat format;
@@ -32,7 +40,7 @@ namespace OpenEXR
                 format = PixelFormat.None;
                 return null;
             }
-            
+
             int sizeInBytes = 0;
             bool hasAlpha = true;
             (format, sizeInBytes, hasAlpha) = exrFormat switch
@@ -44,10 +52,12 @@ namespace OpenEXR
                 _ => (PixelFormat.None, 0, false),
             };
 
-            var dataPointer = new DataPointer(ptr, width * height * (hasAlpha?4:3) * sizeInBytes);
+            var rowPitch = width * (hasAlpha ? 4 : 3) * sizeInBytes;
 
-            var texture = Texture.New2D(device, width, height, format);
-            texture.SetData(commandList, dataPointer);
+            var texture = Texture.New(
+                device,
+                TextureDescription.New2D(width, height, format, usage: GraphicsResourceUsage.Immutable),
+                new DataBox(ptr, rowPitch, rowPitch * height));
 
             Marshal.FreeCoTaskMem(ptr);
 
@@ -55,15 +65,20 @@ namespace OpenEXR
         }
     }
 
-    public static class ExrWriter
+    public static unsafe class ExrWriter
     {
         #pragma warning disable CA5393
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 
         [DllImport("../native/VL.OpenEXR.Native.dll")]
-        static extern void write_texture(string path, int width, int height, ExrPixelFormat format, IntPtr data);
-        
-        public static void WriteTexture(byte[] data, string path, int width, int height, PixelFormat format)
+        static extern int write_texture(string path, int width, int height, ExrPixelFormat format, ExrEncoding encoding, IntPtr data);
+
+        public static int WriteTexture(byte[] data, string path, int width, int height, PixelFormat format, ExrEncoding encoding)
+        {
+            return WriteTexture((ReadOnlySpan<byte>)data, path, width, height, format, encoding);
+        }
+
+        public static int WriteTexture(ReadOnlySpan<byte> data, string path, int width, int height, PixelFormat format, ExrEncoding encoding)
         {
             ExrPixelFormat exrFormat = format switch
             {
@@ -73,20 +88,11 @@ namespace OpenEXR
                 _ => ExrPixelFormat.Unknown
             };
 
-            if(exrFormat == ExrPixelFormat.Unknown) return;
+            if(exrFormat == ExrPixelFormat.Unknown) return 1; //return with error
 
-            GCHandle handle = GCHandle.Alloc(data, GCHandleType.Pinned);
-            try
+            fixed (byte* pointer = data)
             {
-                write_texture(path, width, height, exrFormat, handle.AddrOfPinnedObject());
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e);
-            }
-            finally
-            {
-                handle.Free();
+                return write_texture(path, width, height, exrFormat, encoding, new IntPtr(pointer));
             }
         }
     }
