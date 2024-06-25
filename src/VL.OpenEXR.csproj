@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Stride.Graphics" Version="4.2.0.2149" PrivateAssets="all" />
+    <PackageReference Include="Stride.Graphics" Version="4.2.0.2121" PrivateAssets="all" />
   </ItemGroup>
 
 </Project>
