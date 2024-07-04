@@ -26,7 +26,7 @@ namespace OpenEXR
         #pragma warning disable CA5393
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 
-        [DllImport("../native/VL.OpenEXR.Native.dll")]
+        [DllImport("VL.OpenEXR.Native.dll")]
         static extern IntPtr load_from_path(string path, out int width, out int height, out ExrPixelFormat format);
 
         public static Texture LoadFromPath(string path, GraphicsDevice device)
@@ -70,7 +70,7 @@ namespace OpenEXR
         #pragma warning disable CA5393
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 
-        [DllImport("../native/VL.OpenEXR.Native.dll")]
+        [DllImport("VL.OpenEXR.Native.dll")]
         static extern int write_texture(string path, int width, int height, ExrPixelFormat format, ExrEncoding encoding, IntPtr data);
 
         public static int WriteTexture(byte[] data, string path, int width, int height, PixelFormat format, ExrEncoding encoding)
