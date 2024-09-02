@@ -27,13 +27,19 @@ namespace OpenEXR
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 
         [DllImport("../native/VL.OpenEXR.Native.dll")]
-        static extern IntPtr load_from_path(string path, out int width, out int height, out ExrPixelFormat format);
+        static extern Int32 load_from_path(string path, out int width, out int height, out ExrPixelFormat format, out IntPtr data);
 
         public static Texture LoadFromPath(string path, GraphicsDevice device, CommandList commandList)
         {
             ExrPixelFormat exrFormat;
             PixelFormat format;
-            IntPtr ptr = load_from_path(path, out var width, out var height, out exrFormat);
+            IntPtr ptr;
+            var result = load_from_path(path, out var width, out var height, out exrFormat, out ptr);
+
+            if(result != 0) {
+                format = PixelFormat.None;
+                return null;
+            }
 
             if(exrFormat == ExrPixelFormat.Unknown || ptr == IntPtr.Zero)
             {
