@@ -56,7 +56,6 @@
                       </p:NodeReference>
                       <Pin Id="OJbKkQ1ltvKLx1hHbhtMpa" Name="Path" Kind="InputPin" />
                       <Pin Id="DVYrKsJjVpKQBcZP7bvjFc" Name="Device" Kind="InputPin" />
-                      <Pin Id="M9aE5sa5PnENRa6yQCJEIh" Name="Command List" Kind="InputPin" />
                       <Pin Id="FLpemKM5uBaQANjQzXtmNS" Name="Result" Kind="OutputPin" />
                     </Node>
                   </Patch>
@@ -84,35 +83,13 @@
               <Pin Id="LH1ShzsgrITQdqzURExFSI" Name="Input 2" Kind="InputPin" />
               <Pin Id="RXJEzwsf45YOhg2Ha2ckUF" Name="Output" Kind="StateOutputPin" />
             </Node>
-            <Node Bounds="560,285,40,19" Id="QxavksqqwNZOCT380wBOBb">
+            <Node Bounds="560,285,40,26" Id="QxavksqqwNZOCT380wBOBb">
               <p:NodeReference LastCategoryFullName="IO.Path" LastDependency="CoreLibBasics.vl">
                 <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                 <Choice Kind="OperationCallFlag" Name="IsFile" />
               </p:NodeReference>
               <Pin Id="DSf6VM3pzvxN0f4LEnubzo" Name="Input" Kind="StateInputPin" />
               <Pin Id="UQnzBSrBmKYNRYKlYDqjXc" Name="Is File" Kind="OutputPin" />
-            </Node>
-            <Node Bounds="820,271,92,19" Id="DeVcRmbBEQuPxCIjgXuIuB">
-              <p:NodeReference LastCategoryFullName="Stride.Utils" LastDependency="VL.Stride.Graphics.vl">
-                <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
-                <Choice Kind="ProcessAppFlag" Name="GraphicsContext" />
-                <CategoryReference Kind="Category" Name="Utils" NeedsToBeDirectParent="true">
-                  <p:OuterCategoryReference Kind="Category" Name="Stride" NeedsToBeDirectParent="true" />
-                </CategoryReference>
-              </p:NodeReference>
-              <Pin Id="HVfWBG6jMEVNg5AGJpGPkb" Name="Output" Kind="OutputPin" />
-              <Pin Id="QAK0wCXswPaPfPMyyKY02c" Name="Node Context" Kind="InputPin" IsHidden="true" />
-            </Node>
-            <Pad Id="KDbhz7zgqGZO6xwMwVS1kn" SlotId="O0S74lWuxHDOrs6nuCJilF" Bounds="822,320" />
-            <Node Bounds="807,340,79,26" Id="SPJ3ahQyu2oPqUt9ldamlz">
-              <p:NodeReference LastCategoryFullName="Stride.Graphics.GraphicsContext" LastDependency="Stride.Graphics.dll">
-                <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
-                <Choice Kind="OperationCallFlag" Name="CommandList" />
-                <CategoryReference Kind="AssemblyCategory" Name="GraphicsContext" NeedsToBeDirectParent="true" />
-              </p:NodeReference>
-              <Pin Id="EUEiiMoBvldPi1CokiNu4p" Name="Input" Kind="StateInputPin" />
-              <Pin Id="KjjnnoZJZBiPKOcXsTtbBa" Name="Output" Kind="StateOutputPin" />
-              <Pin Id="RZrjEPAsZbdPoQG51XVya1" Name="Command List" Kind="OutputPin" />
             </Node>
             <Node Bounds="672,270,86,19" Id="J9CNQSF6GvTOSQIcPh3vom">
               <p:NodeReference LastCategoryFullName="Stride.Utils" LastDependency="VL.Stride.Graphics.vl">
@@ -126,7 +103,7 @@
               <Pin Id="BzMqrqHKltrOstgo86wm4T" Name="Node Context" Kind="InputPin" IsHidden="true" />
             </Node>
             <Pad Id="ILfpsWWX7MFMXpfQn0sikV" SlotId="AyauMdoYIlLMsu2Uwqa14o" Bounds="675,321" />
-            <Node Bounds="579,330,59,19" Id="NOBbg9gqWN8L84DyBJh1oD">
+            <Node Bounds="579,330,59,26" Id="NOBbg9gqWN8L84DyBJh1oD">
               <p:NodeReference LastCategoryFullName="IO.Path" LastDependency="CoreLibBasics.vl">
                 <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                 <Choice Kind="OperationCallFlag" Name="FileExists" />
@@ -163,10 +140,6 @@
           <Link Id="KQstJyVADOGQDjJkhukdBJ" Ids="FGtVHzHHDEqQCVzY8AuLoy,R8WOqVg7VUQQDN4TKQgQom" IsFeedback="true" />
           <Link Id="LSsOaJoFSRvMizt1ELjj4h" Ids="R8WOqVg7VUQQDN4TKQgQom,ALUFsJ0Fw6LMAmwlGlwdPy" />
           <Link Id="N68mBTZOBJbMZO4M3bYfHq" Ids="FLpemKM5uBaQANjQzXtmNS,R8WOqVg7VUQQDN4TKQgQom" />
-          <Slot Id="O0S74lWuxHDOrs6nuCJilF" Name="context" />
-          <Link Id="FxdmzsG7AnOMTcz3SQSj81" Ids="HVfWBG6jMEVNg5AGJpGPkb,KDbhz7zgqGZO6xwMwVS1kn" />
-          <Link Id="RElP3kkahS6QQ39JZ375iH" Ids="KDbhz7zgqGZO6xwMwVS1kn,EUEiiMoBvldPi1CokiNu4p" />
-          <Link Id="Qjj6GsqAIKWMFa2jbd53rI" Ids="RZrjEPAsZbdPoQG51XVya1,M9aE5sa5PnENRa6yQCJEIh" />
           <Link Id="K91yBrPYMtnOaOnqDotXYJ" Ids="JiPYN2UzRooPEwlY407cQG,ILfpsWWX7MFMXpfQn0sikV" />
           <Slot Id="AyauMdoYIlLMsu2Uwqa14o" Name="device" />
           <Link Id="BKK0jzLm7rKQbartNx1lDV" Ids="ILfpsWWX7MFMXpfQn0sikV,DVYrKsJjVpKQBcZP7bvjFc" />
@@ -174,7 +147,7 @@
           <Link Id="UUV0n0TIxaOLtB688Qv3H7" Ids="UQnzBSrBmKYNRYKlYDqjXc,MaG7hmGEtifNvNwbsSKc1o" />
           <Link Id="OJ7U7nvC5jiM1dSRNtvoBb" Ids="GA1YmU2BLsgPl4cAB2E7DW,TC7Kx8PNFk3LnfzLN3M8cL" />
           <Link Id="DRd98RRlbjXLAQqJWrU7jL" Ids="GJUh5oFameqMXHHdxv9xIc,BUDsWAEkGCQMJn1G1TSD5T" />
-          <Patch Id="UPTDYLXB0k3O3MLDSnEj5J" Name="Create" ParticipatingElements="FxdmzsG7AnOMTcz3SQSj81,K91yBrPYMtnOaOnqDotXYJ" />
+          <Patch Id="UPTDYLXB0k3O3MLDSnEj5J" Name="Create" ParticipatingElements="K91yBrPYMtnOaOnqDotXYJ" />
           <Patch Id="UZrG7rrWPLHNfXju3MSHj2" Name="Update">
             <Pin Id="KVyyBi063lEPVgBYhiCGZq" Name="Path" Kind="InputPin" Bounds="443,206" />
             <Pin Id="UZ0vjzkA4yyOwfxFcpk7v2" Name="Reload" Kind="InputPin" Bounds="464,244">
@@ -323,6 +296,7 @@
                   <Pin Id="SXr6zk3eEvRMYCLqXHQ8bi" Name="Height" Kind="InputPin" />
                   <Pin Id="JwMsNDY2EfCLWYeWaxJTSI" Name="Format" Kind="InputPin" />
                   <Pin Id="JKRByV6PGn9NHbJrLYTFtW" Name="Encoding" Kind="InputPin" />
+                  <Pin Id="Ce0wXKSSt8DPsjpx58buuL" Name="Result" Kind="OutputPin" />
                 </Node>
                 <Node Bounds="244,851,44,26" Id="CI8xsSAJjDINLE7tBtGGSv">
                   <p:NodeReference LastCategoryFullName="Stride.API.Graphics.Texture" LastDependency="VL.Stride.Runtime.TypeForwards.vl">

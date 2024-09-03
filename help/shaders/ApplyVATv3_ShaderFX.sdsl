@@ -1,0 +1,91 @@
+shader ApplyVATv3_ShaderFX : MaterialExtension, ColorBase
+{
+    cbuffer PerMaterial
+    {
+        stage float nFrames;
+        stage float3 boundMin;
+        stage float3 boundMax;
+
+        stage float time;
+        stage float fps;
+    }
+
+    rgroup PerMaterial
+    {
+        stage Texture2D<float4> PositionTexture;
+        stage Texture2D<float4> RotationTexture;
+        stage Texture2D<float4> ColorTexture;
+        stage Texture2D<float4> LookupTable;
+
+        stage SamplerState VATSampler;
+    }
+
+    struct VATAttribute
+    {
+        float3 pos;
+        float3 norm;
+        float4 color;
+    };
+
+    VATAttribute GetAttributeFromTexture(float2 uv)
+    {
+        VATAttribute o;
+
+        float FPS_div_Frames = fps / (nFrames - .01);
+
+        float div = 1.0 / nFrames;
+        
+        float t = time * FPS_div_Frames;
+        t = floor(frac(t) * nFrames);
+
+        float3 bmax10 = boundMax * 10;
+        float3 bmin10 = boundMin * 10;
+
+        float x_ratio = 1.0 - (ceil(bmin10.z) - bmin10.z);
+        float y_ratio = 1.0 - (-bmax10.x - floor(-bmax10.x));
+
+        float2 uv2 = float2(uv.x * x_ratio, (1 - uv.y) * y_ratio);
+        
+        float2 current_LUT_UV = float2(uv2.x, 1 - ( fmod(t,nFrames) * div * y_ratio + uv2.y ) );
+        float4 current_LUT = LookupTable.SampleLevel(VATSampler, current_LUT_UV, 0);
+
+        float boundDiv = (-bmin10.x - floor(-bmin10.x)) >= .5? 2048 : 255;
+
+        float2 current_UV;
+        current_UV.x = current_LUT.x + (current_LUT.y / boundDiv);
+        current_UV.y = 1 - (current_LUT.z + (current_LUT.w / boundDiv));
+
+        float4 texturePos = PositionTexture.SampleLevel(VATSampler, current_UV, 0);
+        float4 textureRot = RotationTexture.SampleLevel(VATSampler, current_UV, 0);
+        float4 textureCol = ColorTexture.SampleLevel(VATSampler, current_UV, 0);
+
+        o.pos = texturePos.xyz;
+
+        float3 up = float3(0,1,0);
+        o.norm = cross(textureRot.xyz, up * textureRot.w + cross(textureRot.xyz, up)) * 2 + up;
+        o.norm = normalize(o.norm);
+
+        o.color = textureCol;
+
+        return o;
+    }
+
+    override stage void GenerateNormal_VS()
+    {
+        // do nothing
+    }
+
+    stage override void TransformPosition()
+    {
+        base.TransformPosition();
+
+        VATAttribute v = GetAttributeFromTexture(streams.TexCoord);
+
+        streams.PositionWS = mul(float4(v.pos,1), World);
+        streams.ShadingPosition = mul(streams.PositionWS, ViewProjection);
+
+        streams.normalWS = mul(v.norm, (float3x3)WorldInverseTranspose);
+
+        streams.Color = v.color;
+    }
+};
