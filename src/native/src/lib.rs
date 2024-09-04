@@ -1,5 +1,7 @@
+use core::num;
 use std::borrow::Cow;
 use std::fs::File;
+use std::mem::size_of;
 use std::io::BufReader;
 use std::os::raw::c_char;
 use std::mem;
@@ -9,6 +11,7 @@ use std::slice::from_raw_parts;
 
 use exr::error::UnitResult;
 use exr::prelude::*;
+use itertools::{izip, multizip};
 
 macro_rules! unwrap_or_return_err {
     ($e: expr) => {
@@ -55,13 +58,7 @@ impl From<SampleType> for ExrPixelFormat {
 
 #[no_mangle]
 pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32, format: ExrPixelFormat, encoding: ExrEncoding, data: *const Sample) -> i32 {
-    let path = match CStr::from_ptr(path).to_str() {
-        Ok(path) => path,
-        Err(err) => {
-            println!("{err}");
-            return 1
-        }
-    };
+    let path = Path::new(unwrap_or_return_err!(CStr::from_ptr(path).to_str()));
 
     let result = match format {
         ExrPixelFormat::U32 => {
@@ -140,14 +137,16 @@ fn write_exr<T: IntoSample>(path: impl AsRef<Path>, array: &[T], width: usize, h
 }
 
 #[no_mangle]
-pub unsafe extern fn load_from_path(path: *const c_char, width: *mut u32, height: *mut u32, format: *mut ExrPixelFormat, data: *mut *mut c_void) -> i32 {
-    let path = match CStr::from_ptr(path).to_str() {
-        Ok(path) => Path::new(path),
-        Err(err) => {
-            println!("{err}");
-            return 1
-        }
-    };
+pub unsafe extern fn load_from_path(path: *const c_char, width: *mut u32, height: *mut u32, num_channels: *mut u32, format: *mut ExrPixelFormat, data: *mut *mut c_void) -> i32 {
+    let path = Path::new(unwrap_or_return_err!(CStr::from_ptr(path).to_str()));
+
+    *data = unwrap_or_return_err!(load(path, &mut *width, &mut *height, &mut *num_channels, &mut *format));
+
+    0
+}
+
+
+fn load(path: &Path, width: &mut u32, height: &mut u32, num_channels: &mut u32, format: &mut ExrPixelFormat) -> anyhow::Result<*mut c_void> {
     let extension = match path
         .extension()
         .and_then(|extension| extension.to_str())
@@ -158,19 +157,19 @@ pub unsafe extern fn load_from_path(path: *const c_char, width: *mut u32, height
 
     match extension {
         "hdr" => {
-            let f = unwrap_or_return_err!(File::open(path));
+            let f = File::open(path)?;
             let r = BufReader::new(f);
-            let mut image = unwrap_or_return_err!(radiant::load(r));
+            let mut image = radiant::load(r)?;
 
             *width = image.width as u32;
             *height = image.height as u32;
+            *num_channels = 3;
             *format = ExrPixelFormat::RGBF32;
 
             let ptr = image.data.as_mut_ptr();
             mem::forget(image);
 
-            *data = ptr as *mut c_void;
-            0
+            Ok(ptr as *mut c_void)
         },
         _ => {
             match MetaData::read_from_file(path, false) {
@@ -184,98 +183,110 @@ pub unsafe extern fn load_from_path(path: *const c_char, width: *mut u32, height
                     match sample_type {
                         Some(sample_type) => {
                             *format = sample_type.into();
-                            *data = match sample_type {
+                            Ok(match sample_type {
                                 SampleType::F16 => {
-                                    let mut image = unwrap_or_return_err!(load_exr_f16(path));
+                                    let (mut image, channels) = load_exr_f16(path, &meta)?;
+                                    *num_channels = channels as u32;
                                     let ret = image.as_mut_ptr() as *mut c_void;
                                     mem::forget(image);
                                     ret
                                 },
                                 SampleType::F32 => {
-                                    let mut image = unwrap_or_return_err!(load_exr_f32(path));
+                                    let (mut image, channels) = load_exr_f32(path, &meta)?;
+                                    *num_channels = channels as u32;
                                     let ret = image.as_mut_ptr() as *mut c_void;
                                     mem::forget(image);
                                     ret
                                 },
                                 SampleType::U32 => {
-                                    let mut image = unwrap_or_return_err!(load_exr_u32(path));
+                                    let (mut image, channels) = load_exr_u32(path, &meta)?;
+                                    *num_channels = channels as u32;
                                     let ret = image.as_mut_ptr() as *mut c_void;
                                     mem::forget(image);
                                     ret
                                 },
-                            }; 
+                            })
                         },
                         None => {
                             *format = ExrPixelFormat::Unknown;
-                            *data = std::ptr::null_mut() as *mut c_void;
+                            *num_channels = 0;
+                            Err(Error::NotSupported("Sample type".into()).into())
                         }
                     }
-                    0
                 },
-                Err(_e) => {
+                Err(err) => {
                     *width = 0;
                     *height = 0;
+                    *num_channels = 0;
                     *format = ExrPixelFormat::Unknown;
-                    *data = std::ptr::null_mut() as *mut c_void;
-                    1
+                    Err(err.into())
                 }
             }
         }
     }
 }
 
-fn load_exr_f16(path: &Path) -> Result<Vec<[f16;4]>> {
-    let image = read_first_rgba_layer_from_file(
-        path,
-        |resolution, _| {
-            let default_pixel: [f16;4] = [f16::from_f32(0.0), f16::from_f32(0.0), f16::from_f32(0.0), f16::from_f32(1.0)];
-            let empty_line = vec![ default_pixel; resolution.width() ];
-            let empty_image = vec![ empty_line; resolution.height() ];
-            empty_image
-        },
-        |pixel_vector, position, (r,g,b, a): (f16, f16, f16, f16)| {
-            pixel_vector[position.y()][position.x()] = [r, g, b, a]
-        },
+fn load_exr_f16(path: &Path, meta: &MetaData) -> Result<(Vec<f16>, usize)> {
+    let image = read_first_flat_layer_from_file(path)?;
+    let w = meta.headers[0].layer_size.0;
+    let h = meta.headers[0].layer_size.1;
+    let num_channels = image.layer_data.channel_data.list.len();
+    let mut flat_data = vec![
+        f16::from_f32(0.); 
+        w * h * num_channels
+    ];
 
-    )?;
+    for i in 0 .. w*h {
+        for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
+            if let FlatSamples::F16(samples) = &channel.sample_data {
+                    flat_data[i * num_channels + channel_index] = samples[i]
+            }else{
+                unreachable!()
+            }
+        }
+    }
 
-    Ok(image.layer_data.channel_data.pixels.into_iter().flatten().collect())
+    Ok((flat_data, num_channels))
 }
 
-fn load_exr_f32(path: &Path) -> Result<Vec<[f32;4]>> {
-    let image = read_first_rgba_layer_from_file(
-        path,
-        |resolution, _| {
-            let default_pixel: [f32;4] = [0.0, 0.0, 0.0, 1.0];
-            let empty_line = vec![ default_pixel; resolution.width() ];
-            let empty_image = vec![ empty_line; resolution.height() ];
-            empty_image
-        },
-        |pixel_vector, position, (r,g,b, a): (f32, f32, f32, f32)| {
-            pixel_vector[position.y()][position.x()] = [r, g, b, a]
-        },
+fn load_exr_f32(path: &Path, meta: &MetaData) -> Result<(Vec<f32>, usize)> {
+    let image = read_first_flat_layer_from_file(path)?;
+    let w = meta.headers[0].layer_size.0;
+    let h = meta.headers[0].layer_size.1;
+    let num_channels = image.layer_data.channel_data.list.len();
+    let mut flat_data = vec![0.;  w * h * num_channels];
 
-    )?;
+    for i in 0 .. w*h {
+        for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
+            if let FlatSamples::F32(samples) = &channel.sample_data {
+                    flat_data[i * num_channels + channel_index] = samples[i]
+            }else{
+                unreachable!()
+            }
+        }
+    }
 
-    Ok(image.layer_data.channel_data.pixels.into_iter().flatten().collect())
+    Ok((flat_data, num_channels))
 }
 
-fn load_exr_u32(path: &Path) -> Result<Vec<[u32;4]>> {
-    let image = read_first_rgba_layer_from_file(
-        path,
-        |resolution, _| {
-            let default_pixel: [u32;4] = [0, 0, 0, u32::MAX];
-            let empty_line = vec![ default_pixel; resolution.width() ];
-            let empty_image = vec![ empty_line; resolution.height() ];
-            empty_image
-        },
-        |pixel_vector, position, (r,g,b, a): (u32, u32, u32, u32)| {
-            pixel_vector[position.y()][position.x()] = [r, g, b, a]
-        },
+fn load_exr_u32(path: &Path, meta: &MetaData) -> Result<(Vec<u32>, usize)> {
+    let image = read_first_flat_layer_from_file(path)?;
+    let w = meta.headers[0].layer_size.0;
+    let h = meta.headers[0].layer_size.1;
+    let num_channels = image.layer_data.channel_data.list.len();
+    let mut flat_data = vec![0;  w * h * num_channels];
 
-    )?;
+    for i in 0 .. w*h {
+        for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
+            if let FlatSamples::U32(samples) = &channel.sample_data {
+                    flat_data[i * num_channels + channel_index] = samples[i]
+            }else{
+                unreachable!()
+            }
+        }
+    }
 
-    Ok(image.layer_data.channel_data.pixels.into_iter().flatten().collect())
+    Ok((flat_data, num_channels))
 }
 
 // The use of exr::Sample is stored in memory at compile time according to the largest element, f32
@@ -301,3 +312,14 @@ fn load_exr_u32(path: &Path) -> Result<Vec<[u32;4]>> {
 
 //     return ptr as usize;
 // }
+
+#[test]
+fn test_depth_image() {
+    let path = Path::new("0270_Ocean_Commission_Canyon_NLD_11.Depth.0001.exr");
+    let mut width = 0;
+    let mut height = 0;
+    let mut num_channels = 0;
+    let mut format = ExrPixelFormat::Unknown;
+    let data = load(path, &mut width, &mut height, &mut num_channels, &mut format).unwrap();
+    assert_eq!(num_channels, 1);
+}
