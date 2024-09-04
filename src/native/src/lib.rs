@@ -264,7 +264,7 @@ fn load_exr_u32(path: &Path) -> Result<Vec<[u32;4]>> {
     let image = read_first_rgba_layer_from_file(
         path,
         |resolution, _| {
-            let default_pixel: [u32;4] = [0, 0, 0, 1];
+            let default_pixel: [u32;4] = [0, 0, 0, u32::MAX];
             let empty_line = vec![ default_pixel; resolution.width() ];
             let empty_image = vec![ empty_line; resolution.height() ];
             empty_image
