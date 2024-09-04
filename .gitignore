@@ -18,6 +18,7 @@ Cargo.lock
 # VL Assembly
 VL*.dll
 !VL.OpenEXR.dll
+!VL.OpenEXR.Native.dll
 
 # stride assembly
 Stride*.dll
