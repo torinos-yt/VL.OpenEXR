@@ -235,7 +235,7 @@ fn load_exr_f16(path: &Path, meta: &MetaData) -> Result<(Vec<f16>, usize)> {
     for i in 0 .. w*h {
         for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
             if let FlatSamples::F16(samples) = &channel.sample_data {
-                flat_data[i * num_channels + (num_channels - channel_index)] = samples[i]
+                flat_data[i * num_channels + (num_channels - 1 - channel_index)] = samples[i]
             }else{
                 unreachable!()
             }
@@ -255,7 +255,7 @@ fn load_exr_f32(path: &Path, meta: &MetaData) -> Result<(Vec<f32>, usize)> {
     for i in 0 .. w*h {
         for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
             if let FlatSamples::F32(samples) = &channel.sample_data {
-                    flat_data[i * num_channels + channel_index] = samples[i]
+                    flat_data[i * num_channels + (num_channels - 1 - channel_index)] = samples[i]
             }else{
                 unreachable!()
             }
@@ -275,7 +275,7 @@ fn load_exr_u32(path: &Path, meta: &MetaData) -> Result<(Vec<u32>, usize)> {
     for i in 0 .. w*h {
         for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
             if let FlatSamples::U32(samples) = &channel.sample_data {
-                    flat_data[i * num_channels + channel_index] = samples[i]
+                    flat_data[i * num_channels + (num_channels - 1 - channel_index)] = samples[i]
             }else{
                 unreachable!()
             }
@@ -311,11 +311,23 @@ fn load_exr_u32(path: &Path, meta: &MetaData) -> Result<(Vec<u32>, usize)> {
 
 #[test]
 fn test_depth_image() {
-    let path = Path::new("0270_Ocean_Commission_Canyon_NLD_11.Depth.0001.exr");
+    let path = Path::new("../../resources/0270_Ocean_Commission_Canyon_NLD_11.Depth.0001.exr");
     let mut width = 0;
     let mut height = 0;
     let mut num_channels = 0;
     let mut format = ExrPixelFormat::Unknown;
     let data = load(path, &mut width, &mut height, &mut num_channels, &mut format).unwrap();
     assert_eq!(num_channels, 1);
+}
+
+
+#[test]
+fn test_rgba16_image() {
+    let path = Path::new("../../resources/OutdoorHDRI016_2K-HDR.exr");
+    let mut width = 0;
+    let mut height = 0;
+    let mut num_channels = 0;
+    let mut format = ExrPixelFormat::Unknown;
+    let data = load(path, &mut width, &mut height, &mut num_channels, &mut format).unwrap();
+    assert_eq!(num_channels, 4);
 }
