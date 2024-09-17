@@ -43,7 +43,6 @@ pub enum ExrPixelFormat
     U32 = 0,
     F16 = 1,
     F32 = 2,
-    RGBF32 = 3
 }
 
 impl From<SampleType> for ExrPixelFormat {
@@ -164,7 +163,7 @@ fn load(path: &Path, width: &mut u32, height: &mut u32, num_channels: &mut u32, 
             *width = image.width as u32;
             *height = image.height as u32;
             *num_channels = 3;
-            *format = ExrPixelFormat::RGBF32;
+            *format = ExrPixelFormat::F32;
 
             let ptr = image.data.as_mut_ptr();
             mem::forget(image);

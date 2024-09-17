@@ -10,7 +10,6 @@ namespace OpenEXR
         U32 = 0,
         F16 = 1,
         F32 = 2,
-        RGBF32 = 3
     }
 
     public enum ExrEncoding {
@@ -65,9 +64,6 @@ namespace OpenEXR
                 (ExrPixelFormat.F16, 1) => (PixelFormat.R16_Float, 2, true),
                 (ExrPixelFormat.F32, 1) => (PixelFormat.R32_Float, 4, true),
                 (ExrPixelFormat.U32, 1) => (PixelFormat.R32_UInt , 4, true),
-
-
-                (ExrPixelFormat.RGBF32, 3) => (PixelFormat.R32G32B32_Float, 4, false),
                 _ => (PixelFormat.None, 0, false),
             };
 
