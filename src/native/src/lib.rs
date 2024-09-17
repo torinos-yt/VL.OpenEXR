@@ -1,7 +1,5 @@
-use core::num;
 use std::borrow::Cow;
 use std::fs::File;
-use std::mem::size_of;
 use std::io::BufReader;
 use std::os::raw::c_char;
 use std::mem;
@@ -11,7 +9,6 @@ use std::slice::from_raw_parts;
 
 use exr::error::UnitResult;
 use exr::prelude::*;
-use itertools::{izip, multizip};
 
 macro_rules! unwrap_or_return_err {
     ($e: expr) => {
