@@ -33,7 +33,7 @@ namespace OpenEXR
             ExrPixelFormat exrFormat;
             PixelFormat format;
             IntPtr ptr;
-            var result = load_from_path(path, out var width, out var height, out var num_channels, out exrFormat, out ptr);
+            var result = load_from_path(path, out var width, out var height, out var numChannels, out exrFormat, out ptr);
 
             if(result != 0) {
                 format = PixelFormat.None;
@@ -47,27 +47,26 @@ namespace OpenEXR
             }
 
             int sizeInBytes = 0;
-            bool hasAlpha = true;
-            (format, sizeInBytes, hasAlpha) = (exrFormat, num_channels) switch
+            (format, sizeInBytes) = (exrFormat, numChannels) switch
             {
-                (ExrPixelFormat.F16, 4) => (PixelFormat.R16G16B16A16_Float, 2, true),
-                (ExrPixelFormat.F32, 4) => (PixelFormat.R32G32B32A32_Float, 4, true),
-                (ExrPixelFormat.U32, 4) => (PixelFormat.R32G32B32A32_UInt , 4, true),
+                (ExrPixelFormat.F16, 4) => (PixelFormat.R16G16B16A16_Float, 2),
+                (ExrPixelFormat.F32, 4) => (PixelFormat.R32G32B32A32_Float, 4),
+                (ExrPixelFormat.U32, 4) => (PixelFormat.R32G32B32A32_UInt , 4),
 
-                (ExrPixelFormat.F32, 3) => (PixelFormat.R32G32B32_Float, 4, true),
-                (ExrPixelFormat.U32, 3) => (PixelFormat.R32G32B32_UInt , 4, true),
+                (ExrPixelFormat.F32, 3) => (PixelFormat.R32G32B32_Float, 4),
+                (ExrPixelFormat.U32, 3) => (PixelFormat.R32G32B32_UInt , 4),
 
-                (ExrPixelFormat.F16, 2) => (PixelFormat.R16G16_Float, 2, true),
-                (ExrPixelFormat.F32, 2) => (PixelFormat.R32G32_Float, 4, true),
-                (ExrPixelFormat.U32, 2) => (PixelFormat.R32G32_UInt , 4, true),
+                (ExrPixelFormat.F16, 2) => (PixelFormat.R16G16_Float, 2),
+                (ExrPixelFormat.F32, 2) => (PixelFormat.R32G32_Float, 4),
+                (ExrPixelFormat.U32, 2) => (PixelFormat.R32G32_UInt , 4),
 
-                (ExrPixelFormat.F16, 1) => (PixelFormat.R16_Float, 2, true),
-                (ExrPixelFormat.F32, 1) => (PixelFormat.R32_Float, 4, true),
-                (ExrPixelFormat.U32, 1) => (PixelFormat.R32_UInt , 4, true),
-                _ => (PixelFormat.None, 0, false),
+                (ExrPixelFormat.F16, 1) => (PixelFormat.R16_Float, 2),
+                (ExrPixelFormat.F32, 1) => (PixelFormat.R32_Float, 4),
+                (ExrPixelFormat.U32, 1) => (PixelFormat.R32_UInt , 4),
+                _ => (PixelFormat.None, 0),
             };
 
-            var rowPitch = width * (hasAlpha ? 4 : 3) * sizeInBytes;
+            var rowPitch = width * numChannels * sizeInBytes;
 
             var texture = Texture.New(
                 device,
