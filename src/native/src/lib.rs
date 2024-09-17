@@ -238,7 +238,7 @@ fn load_exr_f16(path: &Path, meta: &MetaData) -> Result<(Vec<f16>, usize)> {
     for i in 0 .. w*h {
         for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
             if let FlatSamples::F16(samples) = &channel.sample_data {
-                    flat_data[i * num_channels + channel_index] = samples[i]
+                flat_data[i * num_channels + (num_channels - channel_index)] = samples[i]
             }else{
                 unreachable!()
             }
