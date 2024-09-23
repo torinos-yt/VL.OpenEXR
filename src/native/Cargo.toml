@@ -9,6 +9,7 @@ name = "vl_openexr_native"
 crate-type = ["cdylib"]
 
 [dependencies]
+anyhow = { version = "1.0.86", features = ["backtrace"] }
 exr = "1.72.0"
 radiant = "0.3.0"
 
