@@ -1,4 +1,4 @@
-VL.OpenEXR
+# VL.OpenEXR
 
 [OpenEXR](https://www.openexr.com/) (.exr) and Radiance HDR (.hdr) image loader and .exr file writer. Supported .exr compression formats:
 - Uncompressed
