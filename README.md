@@ -1,6 +1,6 @@
 VL.OpenEXR
 
-Loads [OpenEXR](https://www.openexr.com/) and Radiance HDR(.hdr) into textures and can write textures as .exr files. Supported .exr compression formats:
+[OpenEXR](https://www.openexr.com/) (.exr) and Radiance HDR (.hdr) image loader and .exr file writer. Supported .exr compression formats:
 - Uncompressed
 - RLE
 - ZIP1
