@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Document xmlns:p="property" xmlns:r="reflection" Id="Rcu3NDFVVYdL9QMaVXfuME" LanguageVersion="2024.6.5" Version="0.128">
+<Document xmlns:p="property" xmlns:r="reflection" Id="Rcu3NDFVVYdL9QMaVXfuME" LanguageVersion="2024.6.6" Version="0.128">
   <Patch Id="QcyBSDz9jgYPBJjrZl6tIT">
     <Canvas Id="Rh5YsOfHFh6OF2E4UspMnI" DefaultCategory="Main" BordersChecked="false" CanvasType="FullCategory" />
     <!--
@@ -40,7 +40,7 @@
             <Pin Id="QXLCmzRyXusMiaoh91L6e1" Name="Reload" Kind="InputPin" />
             <Pin Id="DWUt4jKnZzBLHH2KKHVil4" Name="Texture" Kind="OutputPin" />
           </Node>
-          <Node Bounds="250,495,79,19" Id="E3c764duVfPL3uks4hKCc5">
+          <Node Bounds="250,520,85,19" Id="E3c764duVfPL3uks4hKCc5">
             <p:NodeReference LastCategoryFullName="OpenEXR" LastDependency="VL.OpenEXR.vl">
               <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
               <CategoryReference Kind="Category" Name="OpenEXR" NeedsToBeDirectParent="true" />
@@ -51,6 +51,7 @@
             <Pin Id="NYhuKOLhEPoP1GrifWOCEV" Name="Input" Kind="InputPin" />
             <Pin Id="VcODYgZiKElLelnNOUIae2" Name="Filename" Kind="InputPin" />
             <Pin Id="BHx2p6H4fx6QJEr4gczV83" Name="Compression" Kind="InputPin" />
+            <Pin Id="G5aauXDV7RaPPpVTQO0fr6" Name="OutputFormat" Kind="InputPin" />
             <Pin Id="HHTLaeSr9yrL47bpQoO8ID" Name="Write" Kind="InputPin" />
           </Node>
           <Pad Id="JqOp7PzPifpOlpV3KT0K6Q" Comment="Compression" Bounds="302,432,104,15" ShowValueBox="true" isIOBox="true" Value="FastLossless">
@@ -58,12 +59,12 @@
               <Choice Kind="TypeFlag" Name="ExrEncoding" />
             </p:TypeAnnotation>
           </Pad>
-          <Pad Id="IeyU8uz8xMRLHQ10vCNIMn" Comment="Filename" Bounds="277,402,140,15" ShowValueBox="true" isIOBox="true" Value="c:\temp\foo.exr">
+          <Pad Id="IeyU8uz8xMRLHQ10vCNIMn" Comment="Filename" Bounds="277,402,140,15" ShowValueBox="true" isIOBox="true" Value="c:\temp\foo_rgba.exr">
             <p:TypeAnnotation LastCategoryFullName="IO" LastDependency="VL.CoreLib.vl">
               <Choice Kind="TypeFlag" Name="Path" />
             </p:TypeAnnotation>
           </Pad>
-          <Pad Id="G9OlV0FildwL4P9NYZwgNF" Comment="Write" Bounds="352,465,35,35" ShowValueBox="true" isIOBox="true" Value="false">
+          <Pad Id="G9OlV0FildwL4P9NYZwgNF" Comment="Write" Bounds="352,490,35,35" ShowValueBox="true" isIOBox="true" Value="false">
             <p:TypeAnnotation LastCategoryFullName="Primitive" LastDependency="VL.CoreLib.vl">
               <Choice Kind="ImmutableTypeFlag" Name="Boolean" />
             </p:TypeAnnotation>
@@ -89,6 +90,11 @@
               <p:stringtype p:Assembly="VL.Core" p:Type="VL.Core.StringType">Comment</p:stringtype>
             </p:ValueBoxSettings>
           </Pad>
+          <Pad Id="FF7CvJLvitCLl4stdcZGEJ" Comment="OutputFormat" Bounds="325,461,46,15" ShowValueBox="true" isIOBox="true" Value="Rgba">
+            <p:TypeAnnotation LastCategoryFullName="OpenEXR" LastDependency="VL.OpenEXR.vl">
+              <Choice Kind="TypeFlag" Name="ExrFormat" />
+            </p:TypeAnnotation>
+          </Pad>
         </Canvas>
         <Patch Id="O9xJLBchsLVNYbUACiJ0lm" Name="Create" />
         <Patch Id="Ki1hvooTsWhP2jkewEfAY9" Name="Update" />
@@ -102,12 +108,13 @@
         <Link Id="UVGWmbU5YRrLIEDaR6JAPG" Ids="JqOp7PzPifpOlpV3KT0K6Q,BHx2p6H4fx6QJEr4gczV83" />
         <Link Id="PndPtEkbACqNZn9pKy6DqA" Ids="IeyU8uz8xMRLHQ10vCNIMn,VcODYgZiKElLelnNOUIae2" />
         <Link Id="KLAPe0pLNaOMq3I2V77gbL" Ids="G9OlV0FildwL4P9NYZwgNF,HHTLaeSr9yrL47bpQoO8ID" />
+        <Link Id="MhIpMIggeFUQcueyzKPzyw" Ids="FF7CvJLvitCLl4stdcZGEJ,G5aauXDV7RaPPpVTQO0fr6" />
       </Patch>
     </Node>
   </Patch>
-  <NugetDependency Id="TugQA41hz6gMTQv2Ue3Tha" Location="VL.CoreLib" Version="2024.6.5" />
+  <NugetDependency Id="TugQA41hz6gMTQv2Ue3Tha" Location="VL.CoreLib" Version="2024.6.6" />
   <DocumentDependency Id="PKrJRPztKCDOettEG9UaO7" Location="../VL.OpenEXR.vl" />
-  <NugetDependency Id="EARv94p4Aj5N8NlvBot5uY" Location="VL.Stride" Version="2024.6.5" />
-  <NugetDependency Id="DrlANwRD6NILKp7OcAxxLc" Location="VL.Stride.Runtime" Version="2024.6.5" />
-  <NugetDependency Id="HyCxtVKd8vZNcARB9XVHUU" Location="VL.Stride.TextureFX" Version="2024.6.5" />
+  <NugetDependency Id="EARv94p4Aj5N8NlvBot5uY" Location="VL.Stride" Version="2024.6.6" />
+  <NugetDependency Id="DrlANwRD6NILKp7OcAxxLc" Location="VL.Stride.Runtime" Version="2024.6.6" />
+  <NugetDependency Id="HyCxtVKd8vZNcARB9XVHUU" Location="VL.Stride.TextureFX" Version="2024.6.6" />
 </Document>
