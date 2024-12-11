@@ -245,7 +245,9 @@ fn load_exr_f16(path: &Path, meta: &MetaData) -> Result<(Vec<f16>, usize)> {
 
         Ok((flat_data, num_channels))
     }else{
-        // RGB f16 is not supported in dx11 so we return RGBA f16 instead with alpha 1
+        // RGB f16 is not supported in dx11 so we return RGBA f16 instead with alpha 1.
+        // The decision to return RGBA f16 and not something else like RGB f32 is to prioritize
+        // memory usage and avoid precision conversions.
         let num_channels = 4;
         let mut flat_data = vec![
             f16::from_f32(1.); 
