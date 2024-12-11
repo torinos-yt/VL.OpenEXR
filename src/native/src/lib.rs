@@ -227,22 +227,44 @@ fn load_exr_f16(path: &Path, meta: &MetaData) -> Result<(Vec<f16>, usize)> {
     let w = meta.headers[0].layer_size.0;
     let h = meta.headers[0].layer_size.1;
     let num_channels = image.layer_data.channel_data.list.len();
-    let mut flat_data = vec![
-        f16::from_f32(0.); 
-        w * h * num_channels
-    ];
 
-    for i in 0 .. w*h {
-        for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
-            if let FlatSamples::F16(samples) = &channel.sample_data {
-                flat_data[i * num_channels + (num_channels - 1 - channel_index)] = samples[i]
-            }else{
-                unreachable!()
+    if num_channels != 3 {
+        let mut flat_data = vec![
+            f16::from_f32(0.); 
+            w * h * num_channels
+        ];
+        for i in 0 .. w*h {
+            for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
+                if let FlatSamples::F16(samples) = &channel.sample_data {
+                    flat_data[i * num_channels + (num_channels - 1 - channel_index)] = samples[i]
+                }else{
+                    unreachable!()
+                }
             }
         }
-    }
 
-    Ok((flat_data, num_channels))
+        Ok((flat_data, num_channels))
+    }else{
+        // RGB f16 is not supported in dx11 so we return RGBA f16 instead with alpha 1.
+        // The decision to return RGBA f16 and not something else like RGB f32 is to prioritize
+        // memory usage and avoid precision conversions.
+        let num_channels = 4;
+        let mut flat_data = vec![
+            f16::from_f32(1.); 
+            w * h * num_channels
+        ];
+        for i in 0 .. w*h {
+            for (channel_index, channel) in image.layer_data.channel_data.list.iter().enumerate() {
+                if let FlatSamples::F16(samples) = &channel.sample_data {
+                    flat_data[i * num_channels + (num_channels - 2 - channel_index)] = samples[i]
+                }else{
+                    unreachable!()
+                }
+            }
+        }
+
+        Ok((flat_data, num_channels))
+    }
 }
 
 fn load_exr_f32(path: &Path, meta: &MetaData) -> Result<(Vec<f32>, usize)> {
