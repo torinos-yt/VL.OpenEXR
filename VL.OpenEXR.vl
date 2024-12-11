@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Document xmlns:p="property" xmlns:r="reflection" Id="KKFE0MPJIc6LlWOjcXeMEx" LanguageVersion="2024.6.5" Version="0.128">
+<Document xmlns:p="property" xmlns:r="reflection" Id="KKFE0MPJIc6LlWOjcXeMEx" LanguageVersion="2024.6.6" Version="0.128">
   <Patch Id="IbW8cR8uZ8rOQKPIBfaIVA">
     <Canvas Id="BdoB2gFaudQPle25UEBSrc" DefaultCategory="Main" CanvasType="FullCategory">
       <!--
@@ -285,7 +285,7 @@
                   <Pin Id="NZsPrQw6LsBOY6H1K2v8Is" Name="Output" Kind="OutputPin" />
                   <Pin Id="IHlAM7M1lIHOwlZCgost4H" Name="Node Context" Kind="InputPin" IsHidden="true" />
                 </Node>
-                <Node Bounds="303,933,105,19" Id="O1uQb2t32eYM7sm7QzpNcv">
+                <Node Bounds="303,933,125,19" Id="O1uQb2t32eYM7sm7QzpNcv">
                   <p:NodeReference LastCategoryFullName="OpenEXR.ExrWriter" LastDependency="VL.OpenEXR.dll">
                     <Choice Kind="NodeFlag" Name="Node" Fixed="true" />
                     <Choice Kind="OperationCallFlag" Name="WriteTexture" />
@@ -297,6 +297,7 @@
                   <Pin Id="JwMsNDY2EfCLWYeWaxJTSI" Name="Format" Kind="InputPin" />
                   <Pin Id="JKRByV6PGn9NHbJrLYTFtW" Name="Encoding" Kind="InputPin" />
                   <Pin Id="Ce0wXKSSt8DPsjpx58buuL" Name="Result" Kind="OutputPin" />
+                  <Pin Id="UHAO7NpPvupNGkto0wlLVh" Name="Output_format" Kind="InputPin" />
                 </Node>
                 <Node Bounds="244,851,44,26" Id="CI8xsSAJjDINLE7tBtGGSv">
                   <p:NodeReference LastCategoryFullName="Stride.API.Graphics.Texture" LastDependency="VL.Stride.Runtime.TypeForwards.vl">
@@ -438,6 +439,8 @@
               </p:TypeAnnotation>
             </Pad>
             <ControlPoint Id="EFxk27ANoxTOkAijLWfFT8" Bounds="798,814" />
+            <ControlPoint Id="A1egatkeQomNTo7eZHgVPa" Bounds="799,922" />
+            <ControlPoint Id="QjFzb63c3DcPEzQdlACOeB" Bounds="798,890" />
           </Canvas>
           <ProcessDefinition Id="QZ0ZLEDyKf8QUDyDlI5XGP">
             <Fragment Id="My73eRfzFc1L6vSPocoHwS" Patch="KxdEs81XwB4Pe5Q2NyHe1C" Enabled="true" />
@@ -492,6 +495,7 @@
             </Pin>
             <Pin Id="C1HNsSNX5AFP6sEtQIeYQk" Name="Filename" Kind="InputPin" Bounds="595,270" />
             <Pin Id="NIsEwoAAdkWLvpzI4wDgBB" Name="Compression" Kind="InputPin" />
+            <Pin Id="T1I64lfpX5cP7Thyv9lp5S" Name="OutputFormat" Kind="InputPin" />
             <Pin Id="Ak8mIagzbPPOKoDeUN5oGc" Name="Write" Kind="InputPin" Bounds="883,290" DefaultValue="False">
               <p:TypeAnnotation LastCategoryFullName="Primitive" LastDependency="CoreLibBasics.vl">
                 <Choice Kind="TypeFlag" Name="Boolean" />
@@ -501,6 +505,8 @@
           <Link Id="VLAow1L9tF6OzcICnx0Pvm" Ids="LnMyLXOFeA7PjdVQGI0cZS,HYXWtZUMBVsOZruhNh9gNR" />
           <Link Id="AyukWCU3o1NQEPSuV6g88k" Ids="EFxk27ANoxTOkAijLWfFT8,JKRByV6PGn9NHbJrLYTFtW" />
           <Link Id="Pogz9Mkd2khNHbeMNiV3tv" Ids="NIsEwoAAdkWLvpzI4wDgBB,EFxk27ANoxTOkAijLWfFT8" IsHidden="true" />
+          <Link Id="LOtsR5FNhbyQTuCttbcau3" Ids="T1I64lfpX5cP7Thyv9lp5S,QjFzb63c3DcPEzQdlACOeB" IsHidden="true" />
+          <Link Id="O7MZQs8wbXKOSP37Q7WQIw" Ids="QjFzb63c3DcPEzQdlACOeB,A1egatkeQomNTo7eZHgVPa,UHAO7NpPvupNGkto0wlLVh" />
         </Patch>
       </Node>
     </Canvas>
@@ -527,8 +533,8 @@
   </Patch>
   <PlatformDependency Id="UuYjpCh8TmeQMHFzoqqmcD" Location="./lib/netstandard2.0/VL.OpenEXR.dll" />
   <PlatformDependency Id="Ni2bfrnGNIIPR2aLjHkTxD" Location="Stride.Graphics.dll" />
-  <NugetDependency Id="KV3o8SB8qfqPlrlChNuLf9" Location="VL.Stride" Version="2024.6.5" />
-  <NugetDependency Id="LGFGujr8QU6M2BKEGXaHQE" Location="VL.Stride.Runtime" Version="2024.6.5" />
-  <NugetDependency Id="V0Nk8XJSMMIMN5lYyQoxp7" Location="VL.CoreLib" Version="2024.6.5" />
-  <NugetDependency Id="EwEVo3SbsTbPl8FuHmyBC2" Location="VL.Stride.TextureFX" Version="2024.6.5" />
+  <NugetDependency Id="KV3o8SB8qfqPlrlChNuLf9" Location="VL.Stride" Version="2024.6.6" />
+  <NugetDependency Id="LGFGujr8QU6M2BKEGXaHQE" Location="VL.Stride.Runtime" Version="2024.6.6" />
+  <NugetDependency Id="V0Nk8XJSMMIMN5lYyQoxp7" Location="VL.CoreLib" Version="2024.6.6" />
+  <NugetDependency Id="EwEVo3SbsTbPl8FuHmyBC2" Location="VL.Stride.TextureFX" Version="2024.6.6" />
 </Document>

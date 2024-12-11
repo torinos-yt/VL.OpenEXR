@@ -42,6 +42,14 @@ pub enum ExrPixelFormat
     F32 = 2,
 }
 
+#[derive(Clone, Copy, Debug)]
+#[repr(i32)]
+pub enum ExrFormat
+{
+    Rgb = 0,
+    Rgba = 1,
+}
+
 impl From<SampleType> for ExrPixelFormat {
     fn from(value: SampleType) -> Self {
         match value {
@@ -53,24 +61,24 @@ impl From<SampleType> for ExrPixelFormat {
 }
 
 #[no_mangle]
-pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32, format: ExrPixelFormat, encoding: ExrEncoding, data: *const Sample) -> i32 {
+pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32, format: ExrPixelFormat, encoding: ExrEncoding, output_format: ExrFormat, data: *const Sample) -> i32 {
     let path = Path::new(unwrap_or_return_err!(CStr::from_ptr(path).to_str()));
 
     let result = match format {
         ExrPixelFormat::U32 => {
             let ptr = data as *const u32;
             let array = from_raw_parts(ptr, (width * height * 4) as usize);
-            write_exr(path, array, width as usize, height as usize, encoding)
+            write_exr(path, array, width as usize, height as usize, encoding, output_format)
         },
         ExrPixelFormat::F16 => {
             let ptr = data as *const f16;
             let array = from_raw_parts(ptr, (width * height * 4) as usize);
-            write_exr(path, array, width as usize, height as usize, encoding)
+            write_exr(path, array, width as usize, height as usize, encoding, output_format)
         },
         ExrPixelFormat::F32 => {
             let ptr = data as *const f32;
             let array = from_raw_parts(ptr, (width * height * 4) as usize);
-            write_exr(path, array, width as usize, height as usize, encoding)
+            write_exr(path, array, width as usize, height as usize, encoding, output_format)
         }
         _ => {
             // Unknown
@@ -87,13 +95,7 @@ pub unsafe extern fn write_texture(path: *const c_char, width: i32, height: i32,
     }
 }
 
-fn write_exr<T: IntoSample>(path: impl AsRef<Path>, array: &[T], width: usize, height: usize, encoding: ExrEncoding) -> UnitResult {
-    let channels = SpecificChannels::rgba(|Vec2(x,y)| (
-        array[(y * width + x) * 4 + 0],
-        array[(y * width + x) * 4 + 1],
-        array[(y * width + x) * 4 + 2],
-        array[(y * width + x) * 4 + 3]
-    ));
+fn write_exr<T: IntoSample>(path: impl AsRef<Path>, array: &[T], width: usize, height: usize, encoding: ExrEncoding, output_format: ExrFormat) -> UnitResult {
     let encoding = match encoding  {
         // See encoding presets but expanded here to make clearer the
         // encoding compression
@@ -123,6 +125,28 @@ fn write_exr<T: IntoSample>(path: impl AsRef<Path>, array: &[T], width: usize, h
             line_order: LineOrder::Increasing
         }
     };
+    match output_format {
+        ExrFormat::Rgba => {
+            let channels = SpecificChannels::rgba(|Vec2(x,y)| (
+                array[(y * width + x) * 4 + 0],
+                array[(y * width + x) * 4 + 1],
+                array[(y * width + x) * 4 + 2],
+                array[(y * width + x) * 4 + 3]
+            ));
+            let layer = Layer::new(
+                Vec2(width, height),
+                LayerAttributes::named("first layer"),
+                encoding,
+                channels
+            );
+            Image::from_layer(layer).write().to_file(path)
+        }
+        ExrFormat::Rgb => {
+            let channels = SpecificChannels::rgb(|Vec2(x,y)| (
+                array[(y * width + x) * 4 + 0],
+                array[(y * width + x) * 4 + 1],
+                array[(y * width + x) * 4 + 2],
+            ));
     let layer = Layer::new(
         Vec2(width, height),
         LayerAttributes::named("first layer"),
@@ -130,6 +154,8 @@ fn write_exr<T: IntoSample>(path: impl AsRef<Path>, array: &[T], width: usize, h
         channels
     );
     Image::from_layer(layer).write().to_file(path)
+        }
+    }
 }
 
 #[no_mangle]
@@ -307,30 +333,6 @@ fn load_exr_u32(path: &Path, meta: &MetaData) -> Result<(Vec<u32>, usize)> {
     Ok((flat_data, num_channels))
 }
 
-// The use of exr::Sample is stored in memory at compile time according to the largest element, f32
-
-// fn load_exr(path: &str) -> usize {
-//     let image = read_first_rgba_layer_from_file(
-//         path,
-//         |resolution, _| {
-//             let default_pixel: [Sample;4] = [Sample::default(), Sample::default(), Sample::default(), Sample::default()];
-//             let empty_line = vec![ default_pixel; resolution.width() ];
-//             let empty_image = vec![ empty_line; resolution.height() ];
-//             empty_image
-//         },
-//         |pixel_vector, position, (r,g,b, a): (Sample, Sample, Sample, Sample)| {
-//             pixel_vector[position.y()][position.x()] = [r, g, b, a]
-//         },
-
-//     ).unwrap();
-
-//     let mut pixel = image.layer_data.channel_data.pixels.into_iter().flatten().collect::<Vec<[Sample;4]>>();
-//     let ptr = pixel.as_mut_ptr();
-//     mem::forget(pixel);
-
-//     return ptr as usize;
-// }
-
 #[test]
 fn test_depth_image() {
     let path = Path::new("../../resources/0270_Ocean_Commission_Canyon_NLD_11.Depth.0001.exr");
@@ -338,7 +340,7 @@ fn test_depth_image() {
     let mut height = 0;
     let mut num_channels = 0;
     let mut format = ExrPixelFormat::Unknown;
-    let data = load(path, &mut width, &mut height, &mut num_channels, &mut format).unwrap();
+    let _data = load(path, &mut width, &mut height, &mut num_channels, &mut format).unwrap();
     assert_eq!(num_channels, 1);
 }
 
@@ -350,6 +352,6 @@ fn test_rgba16_image() {
     let mut height = 0;
     let mut num_channels = 0;
     let mut format = ExrPixelFormat::Unknown;
-    let data = load(path, &mut width, &mut height, &mut num_channels, &mut format).unwrap();
+    let _data = load(path, &mut width, &mut height, &mut num_channels, &mut format).unwrap();
     assert_eq!(num_channels, 4);
 }
