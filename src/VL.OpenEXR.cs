@@ -20,7 +20,7 @@ namespace OpenEXR
         PIZ = 4,
     }
 
-    public enum ExrFormat {
+    public enum ExrOutputChannels {
         Rgb = 0,
         Rgba = 1,
     }
@@ -90,14 +90,14 @@ namespace OpenEXR
         [DefaultDllImportSearchPaths(DllImportSearchPath.AssemblyDirectory)]
 
         [DllImport("VL.OpenEXR.Native.dll")]
-        static extern int write_texture(string path, int width, int height, ExrPixelFormat format, ExrEncoding encoding, ExrFormat output_format, IntPtr data);
+        static extern int write_texture(string path, int width, int height, ExrPixelFormat format, ExrEncoding encoding, ExrOutputChannels outputChannels, IntPtr data);
 
-        public static int WriteTexture(byte[] data, string path, int width, int height, PixelFormat format, ExrEncoding encoding, ExrFormat output_format)
+        public static int WriteTexture(byte[] data, string path, int width, int height, PixelFormat format, ExrEncoding encoding, ExrOutputChannels outputChannels)
         {
-            return WriteTexture((ReadOnlySpan<byte>)data, path, width, height, format, encoding, output_format);
+            return WriteTexture((ReadOnlySpan<byte>)data, path, width, height, format, encoding, outputChannels);
         }
 
-        public static int WriteTexture(ReadOnlySpan<byte> data, string path, int width, int height, PixelFormat format, ExrEncoding encoding, ExrFormat output_format)
+        public static int WriteTexture(ReadOnlySpan<byte> data, string path, int width, int height, PixelFormat format, ExrEncoding encoding, ExrOutputChannels outputChannels)
         {
             ExrPixelFormat exrFormat = format switch
             {
@@ -111,7 +111,7 @@ namespace OpenEXR
 
             fixed (byte* pointer = data)
             {
-                return write_texture(path, width, height, exrFormat, encoding, output_format, new IntPtr(pointer));
+                return write_texture(path, width, height, exrFormat, encoding, outputChannels, new IntPtr(pointer));
             }
         }
     }
