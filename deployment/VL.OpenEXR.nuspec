@@ -8,7 +8,7 @@
     <owners>torinos</owners>
     <projectUrl>https://github.com/torinos-yt/VL.OpenEXR</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <summary>OpenEXR (.exr) and Radiance HDR (.hdr) image loader and .exr file writer for vvvv</summary>
+    <description>OpenEXR (.exr) and Radiance HDR (.hdr) image loader and .exr file writer for vvvv</summary>
     <tags>VL, Stride, OpenEXR, hdr</tags>
     <readme>docs\README.md</readme>
   </metadata>
